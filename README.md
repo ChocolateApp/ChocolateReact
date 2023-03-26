@@ -56,7 +56,7 @@ Impre'visible#2576 - [@romeo_chevrier](https://twitter.com/romeo_chevrier) - imp
 ## Acknowledgments
 
 If you like this project, please consider giving me a star ⭐ to support my work and the futures update of this project. 
-[![stars - Chocolate](https://img.shields.io/github/stars/ChocolateApp/Chocolate?style=social)](https://github.com/ChocolateApp/Chocolate)
+[![stars - Chocolate](https://img.shields.io/github/stars/ChocolateApp/ChocolateReact?style=social)](https://github.com/ChocolateApp/ChocolateReact)
 
 This tool was made by Impre-visible, some features needed the help of several volunteers, that I thank, you can contact them on this server : [Dev'Area](https://discord.gg/hTmbFePH)
 
