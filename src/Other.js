@@ -1,9 +1,26 @@
 import { IoPlayOutline, IoDownloadOutline, IoRefreshOutline } from "react-icons/io5";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Header from "./Header";
 import "./App.css";
 
 function Other() {
+    const { libName } = useParams();
+    const [currentLibName, setCurrentLibName] = useState(libName);
+  
+    useEffect(() => {
+      if (libName !== currentLibName) {
+        // Mettre à jour l'état du composant en conséquence
+        let covers = document.querySelectorAll(`.cover`)
+        for (let i = 0; i < covers.length; i++) {
+            if (covers[i].getAttribute("data-lib") !== libName) {
+                covers[i].remove()
+            }
+        }
+        getFirstMovies()
+        setCurrentLibName(libName);
+      }
+    }, [libName]);
 
     function getCookie(name) {
       let cookieValue = null;

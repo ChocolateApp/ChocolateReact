@@ -1747,7 +1747,7 @@ input[type="search"]::-webkit-search-results-decoration {
     grid-template-columns: repeat(3, 30vw);
     grid-row-gap: 4vh;
     grid-column-gap: 0px;
-    width: 97vw;
+    width: 89.5vw;
     margin-top: 20vh;
     margin-left: 9.5vw;
 }

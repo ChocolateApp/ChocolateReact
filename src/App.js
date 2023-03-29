@@ -1,6 +1,7 @@
 import "./App.css";
 import { IoFilmOutline, IoVideocamOutline, IoBookOutline, IoGameControllerOutline, IoHeadsetOutline, IoTvOutline, IoDesktopOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Header from "./Header";
 
 function App() {
@@ -31,8 +32,7 @@ function App() {
       })
           .then(response => response.json())
           .then(data => {
-          console.log(data);
-          setAllLibrary(data);
+            setAllLibrary(data);
           }
           );
   }, []);
@@ -51,11 +51,12 @@ function App() {
     <div className="App">  
       <Header />
       <div className="cardsIndex">
+          
           {allLibrary.map((library) => (
-            <a href={`/${library.libType}/${library.libName}`} className="card">
-              {librariesIcons[library.libType]}
-              <p>{library.libName}</p>
-            </a>
+            <Link to={`/${library.libType}/${library.libName}`} className="card">
+                {librariesIcons[library.libType]}
+                <p>{library.libName}</p>
+            </Link>
           ))}
 
       </div>

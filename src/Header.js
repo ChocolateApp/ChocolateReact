@@ -2,6 +2,7 @@ import logo from "./images/logo.png";
 import "./App.css";
 import { IoSearchOutline, IoCogOutline, IoHomeOutline, IoAddOutline, IoLogOutOutline, IoPersonOutline, IoFilmOutline, IoVideocamOutline, IoBookOutline, IoGameControllerOutline, IoHeadsetOutline, IoTvOutline, IoDesktopOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Header() {
     const [allLibrary, setAllLibrary] = useState([]);
@@ -32,8 +33,7 @@ function Header() {
               })
             .then(response => response.json())
             .then(data => {
-            console.log(data);
-            setAllLibrary(data);
+                setAllLibrary(data);
             }
             )
             .catch((error) => {
@@ -68,26 +68,28 @@ function Header() {
                 <IoSearchOutline className="search_icon" />
                 </button>
             </div>
-            <a className="settings" href="/settings">
+            <Link to="/settings" className="settings">
                 <IoCogOutline className="cog" />
-            </a>
+            </Link>
             <header>
                 <div id="goHome" className="logo_svg">
-                <img
-                    className="logo"
-                    id="logo"
-                    src={logo}
-                    alt="ChocolateLogo"
-                />
+                    <Link to="/">
+                        <img
+                            className="logo"
+                            id="logo"
+                            src={logo}
+                            alt="ChocolateLogo"
+                        />
+                    </Link>
                 </div>
                 <div className="headerIcons">
-                <a href="/">
+                <Link to="/">
                     <IoHomeOutline className="icon" />
-                </a>
+                </Link>
                 {allLibrary.map((library) => (
-                    <a href={`/${library.libType}/${library.libName}`} id={library.libName} key={library.libName}>
-                    {librariesIcons[library.libType]}
-                    </a>
+                    <Link to={`/${library.libType}/${library.libName}`} key={`${library.libType}_${library.libName}`}>
+                        {librariesIcons[library.libType]}
+                    </Link>
                 ))}
                 </div>
                 <div className="headerBottomIcons">

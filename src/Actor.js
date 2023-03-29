@@ -418,13 +418,11 @@ function Actor() {
     let href = window.location.href
     let actorId = href.split("/")
     actorId = actorId[actorId.length - 1]
-    console.log(actorId)
     if (actorId === undefined) {
       return
     }
     let chocolateServerAdress = getCookie("serverAdress")
     let url = `${chocolateServerAdress}/getActorData/${actorId}`
-    console.log(url)
     fetch(url).then(function(response) {
         return response.json()
     }).then(function(data) {
@@ -460,7 +458,6 @@ function Actor() {
         }
 
         let actorMoviesList = document.getElementsByClassName("actorMoviesList")[0]
-        console.log(actorMoviesList.children.length)
         if (actorMoviesList.children.length > 0) {
             return
         }

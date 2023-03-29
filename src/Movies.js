@@ -243,7 +243,7 @@ function Movies() {
             routeToUse = `${chocolateServerAdress}searchMovies/${library}/${username}/${searchTerm}`
         }
         let allGenres = []
-        console.log(routeToUse)
+        
         fetch(routeToUse, {
             method: "GET",
             credentials: "same-origin",
@@ -311,7 +311,9 @@ function Movies() {
                     let image = document.createElement("img")
                     image.className = "cover_movie"
                     image.src =  chocolateServerAdress+""+movie.cover
-                    image.setAttribute("loading", "lazy");
+                    if (i >= 18) { 
+                        image.setAttribute("loading", "lazy");
+                    }
                     if (image.src === "https://image.tmdb.org/t/p/originalNone") {
                         image.src = "/images/broken.webp"
                     }
@@ -653,9 +655,7 @@ function Movies() {
 
     useEffect(() => {
         setSearchBar()
-        console.log("Movies")
         getFirstMovies()
-        console.log("Genres")
     }, []);
     const language = JSON.parse(localStorage.getItem("languageFile"));
 
@@ -688,7 +688,6 @@ function Movies() {
             }}).then(function(response) {
                 return response.json()
             }).then(function(data) {
-                console.log(data)
                 if (data === true) {
                     clearInterval(interval)
                     button.innerHTML = svg+"Done"

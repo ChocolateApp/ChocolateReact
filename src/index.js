@@ -30,6 +30,7 @@ import Tv from "./Tv";
 import Actor from "./Actor";
 
 import EditMovie from "./EditMovie";
+import EditSerie from "./EditSerie";
 
 import SetServerAdress from "./SetServerAdress";
 import reportWebVitals from "./reportWebVitals";
@@ -123,6 +124,10 @@ const BrowserRouter = createBrowserRouter([
   {
     path: "/editMovie/:name/:lib",
     element: <EditMovie />,
+  },
+  {
+    path: "/editSerie/:name/:lib",
+    element: <EditSerie />,
   },
   {
     path: "/settings",

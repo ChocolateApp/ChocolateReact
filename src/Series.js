@@ -1,12 +1,28 @@
 import "./App.css";
 import Header from "./Header";
 import Popup from "./Popup";
-import { IoRefreshOutline, IoFunnelOutline, IoPlayOutline } from "react-icons/io5";
-import { useEffect } from "react";
+import { IoRefreshOutline, IoFunnelOutline, IoPlayOutline, IoPencilOutline } from "react-icons/io5";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 //import Loading from "./Loading";
 
 function Series() {
-    
+    const { libName } = useParams();
+    const [currentLibName, setCurrentLibName] = useState(libName);
+  
+    useEffect(() => {
+      if (libName !== currentLibName) {
+        // Mettre à jour l'état du composant en conséquence
+        let covers = document.querySelectorAll(`.cover`)
+        for (let i = 0; i < covers.length; i++) {
+            if (covers[i].getAttribute("data-lib") !== libName) {
+                covers[i].remove()
+            }
+        }
+        getFirstSeries()
+        setCurrentLibName(libName);
+      }
+    }, [libName]);
     
     const language = JSON.parse(localStorage.getItem("languageFile"));
     
@@ -40,7 +56,6 @@ function Series() {
             covers[i].addEventListener("click", () => {
                 let popup = document.getElementById("popup")
                 popup.style.display = "block"
-                console.log(covers[i].children[0].children[0])
                 document.body.style.overflow = "hidden !important"
                 let image = covers[i].children[0].children[0]
                 let serieId = image.getAttribute("serieid")
@@ -498,7 +513,7 @@ function Series() {
             image.setAttribute("src", "")
             castPopup.removeChild(castDivs[0])
         }
-        let childs = document.getElementsByClassName("movie")
+        let childs = document.getElementsByClassName("serie")
         while (childs.length > 0) {
             childs[0].remove()
         }
@@ -516,8 +531,8 @@ function Series() {
             //pass
         }
         try {
-            let downloadMovie = document.getElementById("downloadMovieButton")
-            downloadMovie.setAttribute("href", "")
+            let downloadSerie = document.getElementById("downloadSerieButton")
+            downloadSerie.setAttribute("href", "")
         } catch (error) {
             //pass
         }
@@ -540,12 +555,14 @@ function Series() {
             //do nothing
         }
     }
+
     function getFirstSeries(searchTerm="") {
         let chocolateServerAdress = getCookie("serverAdress")
         let username = getCookie("username")
         let series = document.getElementById("series")
         let url = window.location.href
         let library = url.split("/")[4]
+
         let routeToUse = ""
         if (searchTerm === "") {
             routeToUse = `${chocolateServerAdress}getAllSeries/${library}/${username}`
@@ -601,6 +618,7 @@ function Series() {
                     series = document.getElementsByClassName("series")[0]
                     let cover = document.createElement("div")
                     cover.className = "cover"
+                    cover.setAttribute("data-lib", library)
 
                     let genres = serie[1]["genre"]
                     genres = JSON.parse(genres)
@@ -649,7 +667,6 @@ function Series() {
                     let image = document.createElement("img")
                     // eslint-disable-next-line no-loop-func
                     image.addEventListener("load", function() {
-                        console.log(`start index: ${startIndex} length to slice: ${lengthToSlice}`)
                         if (startIndex === lengthToSlice) {
                             //hideLoader()
                         }
@@ -664,20 +681,26 @@ function Series() {
                     image.title = serie[0]
                     image.alt = serie[0]
                     image.setAttribute("serieId", serie[1]["id"].toString())
-                    image.setAttribute("loading", "lazy");
+                    if (index >= 18) { 
+                        image.setAttribute("loading", "lazy");
+                    }
                     serie = serie[1]
                     content.appendChild(image)
                     cover.appendChild(content)
                     let accType = getCookie("accountType")
+                    accType = "Admin"
                     if (accType === "Admin") {
-                        let pencilIcon = document.createElement("ion-icon")
-                        pencilIcon.setAttribute("name", "pencil-outline")
-                        pencilIcon.setAttribute("class", "md hydrated pencilIcon")
+                        console.log(serie)
+                        let modelIcon = document.getElementById("editButtonSVG")
+
+                        let pencilIcon = modelIcon.cloneNode(true)
+                        //remove class hidden
+                        pencilIcon.classList.remove("hidden")
+                        pencilIcon.setAttribute("class", "pencilIcon")
                         pencilIcon.setAttribute("title", "Edit metadata")
                         pencilIcon.setAttribute("alt", "Edit metadata")
-                        pencilIcon.setAttribute("id", serie.realTitle)
-                        pencilIcon.setAttribute("aria-label", "pencil outline")
-                        pencilIcon.setAttribute("role", "img")
+                        pencilIcon.setAttribute("id", serie.originalName)
+
                         let theSerieName = serie.originalName
                         let library = serie.libraryName
                         pencilIcon.addEventListener("click", function() {
@@ -973,7 +996,6 @@ function Series() {
             }}).then(function(response) {
                 return response.json()
             }).then(function(data) {
-                console.log(data)
                 if (data === true) {
                     clearInterval(interval)
                     button.innerHTML = svg+"Done"
@@ -1017,11 +1039,8 @@ function Series() {
     }
 
     useEffect(() => {
-        console.log("useEffect")
         setSearchBar()
-        console.log("setSearchBar")
         getFirstSeries()
-        console.log("getFirstSeries")
     }, []);
     
 
@@ -1077,6 +1096,7 @@ function Series() {
             </div>
             </>
             <div className="series" id="series"></div>
+            <IoPencilOutline id="editButtonSVG" className="hidden" />
         </div>
     );
 }
