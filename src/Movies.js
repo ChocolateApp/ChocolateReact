@@ -2,10 +2,22 @@ import "./App.css";
 import Header from "./Header";
 import Popup from "./Popup";
 import { IoRefreshOutline, IoFunnelOutline, IoPlayOutline, IoDownloadOutline, IoPencilOutline } from "react-icons/io5";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "./Loading";
 
 function Movies() {
+
+    function checkCanDownload() {
+        let chocolateServerAdress = getCookie("serverAdress");
+        fetch(`${chocolateServerAdress}checkDownload`, {
+            credentials: "same-origin"
+            })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
+    }
     
     function getCookie(name) {
       let cookieValue = null;
@@ -54,7 +66,7 @@ function Movies() {
                     let movieUrl = data.slug
                     let movieID = data.id
                     movieUrl = "/movie/" + movieID
-                    let movieDownloadURL = chocolateServerAdress+"download/" + movieID
+                    let movieDownloadURL = chocolateServerAdress+"downloadMovie/" + movieID
                     let movieYear = data.date
                     let movieTrailer = data.bandeAnnonceUrl
                     let movieSimilar = data.similarMovies
@@ -181,7 +193,13 @@ function Movies() {
                     playButton.setAttribute("href", movieUrl);
                     
                     let downloadButton = document.getElementsByClassName("downloadPopup")[0]
-                    downloadButton.setAttribute("href", movieDownloadURL);
+                    let canDownload = checkCanDownload()
+                    console.log(canDownload)
+                    if (canDownload === false) {
+                        downloadButton.remove()
+                    } else {
+                        downloadButton.setAttribute("href", movieDownloadURL);
+                    }
                     
                 })
             })
@@ -412,9 +430,11 @@ function Movies() {
                     let titleBanner = document.getElementsByClassName("bannerTitle")[0]
                     let descriptionBanner = document.getElementsByClassName("bannerDescription")[0]
                     let watchNow = document.getElementsByClassName("watchNowA")[0]
+                    let downloadNowA = document.getElementsByClassName("downloadNowA")[0]
                     let movie = data[i]
                     let id = movie.id
-                    let slug = "/movie/" + id
+                    let movieUrl = "/movie/" + id
+                    let downloadMovie = chocolateServerAdress + "downloadMovie/" + id
                     let bannerImage = movie.banner
                     let cssBigBanner = `background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(24, 24, 24, 0.85) 77.08%, #1D1D1D 100%), linear-gradient(95.97deg, #000000 0%, rgba(0, 0, 0, 0.25) 100%, #000000 100%), url("${chocolateServerAdress}${bannerImage}")`
                     imageBanner.setAttribute("style", cssBigBanner)
@@ -431,8 +451,14 @@ function Movies() {
                     })
 
                     genreBanner.innerHTML = JSON.parse(movie.genre).join(", ")
-                    let movieUrl = slug
                     watchNow.setAttribute("href", movieUrl)
+                    let canDownload = checkCanDownload()
+                    console.log(canDownload)
+                    if (canDownload === false) {
+                        downloadNowA.remove()
+                    } else {
+                        downloadNowA.setAttribute("href", downloadMovie)
+                    }
                 }
             }
 
@@ -444,21 +470,48 @@ function Movies() {
                 let bannerTitle = document.getElementsByClassName("bannerTitle")[0]
                 let bannerDescription = document.getElementsByClassName("bannerDescription")[0]
                 let watchNow = document.getElementsByClassName("watchNowA")[0]
-                let downloadA = document.getElementById("downloadNowA")
+                let downloadNowA = document.getElementsByClassName("downloadNowA")[0]
+                let rescanButton = document.getElementById("rescanButton")
+
+                let selectA = document.getElementsByClassName("selectA")[0]
+                let sortA = document.getElementsByClassName("sortA")[0]
+                
+                bannerGenre.setAttribute("style", "top: 46vh;")
+                bannerTitle.setAttribute("style", "top: 47.5vh;")
+                bannerDescription.setAttribute("style", "top: 55vh;")
+                watchNow.setAttribute("style", "top: 65vh;")
+                downloadNowA.setAttribute("style", "top: 65vh;")
+                rescanButton.setAttribute("style", "margin-top: 65vh;")
+
+                selectA.setAttribute("style", "display: none;")
+                sortA.setAttribute("style", "display: none;")
+            } else {
+                let bigBackground = document.getElementsByClassName("bannerCover")[0]
+                bigBackground.style.height = "50vh"
+
+                let bannerGenre = document.getElementsByClassName("bannerGenre")[0]
+                let bannerTitle = document.getElementsByClassName("bannerTitle")[0]
+                let bannerDescription = document.getElementsByClassName("bannerDescription")[0]
+                let watchNow = document.getElementsByClassName("watchNowA")[0]
+                let downloadNowA = document.getElementsByClassName("downloadNowA")[0]
                 let rescanButton = document.getElementById("rescanButton")
 
                 let selectA = document.getElementsByClassName("selectA")[0]
                 let sortA = document.getElementsByClassName("sortA")[0]
 
-                bannerGenre.style.top = "46vh"
-                bannerTitle.style.top = "47.5vh"
-                bannerDescription.style.top = "55vh"
-                watchNow.style.top = "65vh"
-                downloadA.style.top = "65vh"
-                rescanButton.style.marginTop = "65vh"
+                bannerGenre.removeAttribute("style")
+                bannerTitle.removeAttribute("style")
+                bannerDescription.removeAttribute("style")
+                watchNow.removeAttribute("style")
+                try {
+                    downloadNowA.removeAttribute("style")
+                } catch (error) {
+                    console.log(error)
+                }
+                rescanButton.removeAttribute("style")
 
-                selectA.style.display = "none"
-                sortA.style.display = "none"
+                selectA.removeAttribute("style")
+                sortA.removeAttribute("style")
             }
             
             //order allGenres by alphabetical order

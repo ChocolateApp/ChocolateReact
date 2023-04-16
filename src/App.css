@@ -350,12 +350,12 @@ header {
     justify-items: center;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     row-gap: 5vh;
     position: absolute;
     width: 95vw;
     margin-top: 22vh;
     margin-left: 4vw;
+    column-gap: 0.66666666666vw;
 }
 
 .logo_svg {
@@ -579,6 +579,17 @@ label[for="addLibraryButton"] {
     display: inline-block !important;
 }
 
+#ambientModeBackground {
+    top: 0vh;
+    left: 3vw;
+    height: 100vh !important;
+    width: 97vw;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: blur(85px);
+}
+
 @keyframes showPencil {
     0% {
         transform: scale(0);
@@ -612,7 +623,7 @@ label[for="addLibraryButton"] {
     position: absolute;
     top: 2vh;
     right: 2vw;
-    width: 7vw;
+    padding: 0 1vw;
     height: 6vh;
     background: none;
     cursor: pointer;
@@ -830,6 +841,7 @@ label[for="books"] {
     padding: 2vh;
     background: #2b2b2b;
     border-radius: 1vw;
+    position: relative;
 }
 
 .librarySetting>h1 {
@@ -838,8 +850,8 @@ label[for="books"] {
 
 .moveLibrary {
     position: absolute;
-    margin-top: -41vh;
-    margin-left: 19vw;
+    top: 3vh;
+    right: 2vw;
     cursor: grab;
     font-size: 2vh;
 }
@@ -1023,13 +1035,13 @@ svg[name="play"] {
 }
 
 .video-js[tabindex="-1"] {
-    top: 1vh;
-    left: 11.5vw;
-    height: 45vw !important;
+    top: 6vh;
+    left: 16vw;
+    height: 40vw !important;
     aspect-ratio: calc(16 / 9);
     padding: 0 !important;
     margin: 0 !important;
-    width: auto !important;
+    width: calc(40vw / 9 * 16);
 }
 
 .notSorted {
@@ -1546,7 +1558,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .buttonsShow {
-    margin-top: 1vh;
+    margin-top: 7vh;
     height: 10vh;
     display: flex;
     align-items: center;
@@ -1742,14 +1754,12 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .consoleList {
-    display: grid;
-    grid-template-rows: 50vh;
-    grid-template-columns: repeat(3, 30vw);
-    grid-row-gap: 4vh;
-    grid-column-gap: 0px;
-    width: 89.5vw;
+    display: flex;
+    width: 91vw;
     margin-top: 20vh;
-    margin-left: 9.5vw;
+    margin-left: 6vw;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .systemDiv {
@@ -2609,7 +2619,9 @@ svg[name="download-outline"] {
 }
 
 .buttonFullScreenClicked {
-    margin-right: -94vw;
+    right: 0;
+    bottom: 4vh;
+    margin: 0;
 }
 
 .bookImage {
@@ -2694,6 +2706,13 @@ svg[name="download-outline"] {
     width: 94vw;
 }
 
+.leftPart,
+.rightPart,
+.centerPartText {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .leftPart h3,
 .centerPart h3,
 .rightPart h3 {
@@ -2708,12 +2727,16 @@ svg[name="download-outline"] {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-around;
     row-gap: 1vh;
     column-gap: 1vw;
     overflow: scroll;
     width: 65vw;
     max-height: 45vh;
+    min-height: 45vh;
+    border: 5px solid #0b0b0b;
+    border-radius: 3vh;
+    padding: 10px 10px;
 }
 
 .coverAddMedia {
@@ -2733,31 +2756,54 @@ svg[name="download-outline"] {
 }
 
 .alert {
-    display: flex;
-    justify-content: center;
-    opacity: 0;
-    width: 97vw;
+    padding: 2vh 2vw;
     margin-left: 3vw;
     transition: all 0.5s ease-in-out;
+    position: fixed;
+    top: 15vh;
+    background: #0b0b0b;
+    border-radius: 1vh;
+    z-index: 9999999999999999;
+    right: -20vw;
 }
 
-.alert-message {
-    display: flex;
-    justify-content: center;
-    position: fixed;
-    bottom: 1vh;
-    padding: 20px;
-    background: rgb(25 25 25);
-    border-radius: 1vw;
+.alert-fade-in {
+    right: 1vw !important;
+}
+
+.alert-fade-out {
+    right: -20vw !important;
+}
+
+.alert-alert {
+    border-left: 10px solid #ff0000;
+}
+
+.alert-success {
+    border-left: 10px solid #00ff00;
 }
 
 .addMovieButton {
     position: absolute;
-    bottom: 4vh;
+    bottom: -8vh;
     right: 3vw;
-    padding: 5vh 6vw;
-    border-radius: 6vh;
-    font-size: 4vh;
+    background: transparent;
+    box-shadow: 0.1vh 0.1vh 0.5vh #000;
+    padding: 4vh 5vw;
+    transition: 300ms background, color;
+    cursor: pointer;
+    border: 0.2vw solid #ffffff;
+    border-radius: 1.5vw;
+    font-size: 2.4vh;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    text-shadow: 0.1vh 0.1vh 0.5vh #000;
+}
+
+.addMovieButton:hover {
+    background: #ffffff;
+    color: #000000;
 }
 
 .hidden {
@@ -3139,6 +3185,7 @@ svg[name="download-outline"] {
         width: 94vw;
         margin-top: 8vh;
         margin-left: 6vw;
+        justify-content: space-around;
     }
     .card {
         width: 42vw;
@@ -3267,9 +3314,6 @@ svg[name="download-outline"] {
     }
     .settingsCheckbox {
         transform: scale(1);
-    }
-    .submitNewLib {
-        width: 34vw;
     }
     .profileDiv {
         width: 50vw;
@@ -3406,8 +3450,8 @@ svg[name="download-outline"] {
         align-items: center;
         z-index: 5;
         top: 37vh;
-        left: 60vw;
-        padding: 1.7vh 4vw;
+        left: 52vw;
+        padding: 2vh 4vw;
         transition: 300ms background, color;
         cursor: pointer;
         border: 0.2vw solid #ffffff;
@@ -3423,8 +3467,9 @@ svg[name="download-outline"] {
     }
     .rescanButton {
         margin-top: 37vh;
-        padding: 0vh 1vw;
+        padding: 1.4vh 2vw;
         font-size: 1vh;
+        border-radius: 3vw;
     }
     .rescanButton svg {
         padding: 0.5vh 1vw;
@@ -3532,7 +3577,7 @@ svg[name="download-outline"] {
     }
     .expandBook {
         margin-top: 50vh;
-        margin-right: -71vw;
+        margin-right: -25vw;
     }
     .arrowButtonBook {
         font-size: 8vw;
@@ -3555,5 +3600,16 @@ svg[name="download-outline"] {
     }
     .pie:after {
         transform: rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - 9vw/2));
+    }
+    .gameName {
+        display: table-cell;
+        width: 46vw;
+        height: 8vh;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .gameDiv {
+        width: auto;
+        margin: 0 1vw;
     }
 }

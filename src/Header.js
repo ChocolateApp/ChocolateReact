@@ -23,6 +23,26 @@ function Header() {
       return cookieValue;
     }
 
+    function checkAccType() {
+        const cookie = getCookie("token");
+        let chocolateServerAdress = getCookie("serverAdress");
+        fetch(`${chocolateServerAdress}checkAccType`, {
+            credentials: "same-origin",
+            method: "POST",
+            body: JSON.stringify({token: cookie}),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data !== "Admin") {
+                let settings = document.getElementById("settings");
+                settings.remove();
+            }
+        })
+    }
+
 
     useEffect(() => {
         let username = getCookie("username");
@@ -40,6 +60,7 @@ function Header() {
                 console.error("Error:", error);
             });
         }
+        checkAccType();
     }, []);
 
     const language = JSON.parse(localStorage.getItem("languageFile"))
@@ -68,7 +89,7 @@ function Header() {
                 <IoSearchOutline className="search_icon" />
                 </button>
             </div>
-            <Link to="/settings" className="settings">
+            <Link to="/settings" className="settings" id="settings">
                 <IoCogOutline className="cog" />
             </Link>
             <header>

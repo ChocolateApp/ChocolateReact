@@ -33,7 +33,7 @@ function Movie() {
     console.log("setUrl",setUrl)
     let currentTime = playerRef.current.currentTime()
     currentTime = parseInt(currentTime)
-    if (currentTime === lastPush+1) {
+    if (currentTime >= lastPush+1) {
         console.log("pushing new timecode",currentTime+" for movie "+movieID+" to server "+setUrl)
         fetch(setUrl, {
             method: "POST",
@@ -51,6 +51,23 @@ function Movie() {
         lastPush = currentTime
     }
   };
+
+  const ambientMode = (player) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const video = player.el().getElementsByTagName("video")[0];
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const base64 = canvas.toDataURL("image/jpeg", 0.5);
+
+    const ambientModeBackground = document.getElementById("ambientModeBackground");
+    ambientModeBackground.style.backgroundImage = `url(${base64})`;
+  
+  }
 
   const movieID = window.location.href.split("/")[4];
   const chocolateServerAdress = getCookie("serverAdress");
@@ -79,6 +96,7 @@ function Movie() {
     });
     player.on("timeupdate", () => {
       handleTimeUpdate()
+      //ambientMode(player)
     });
     /*
     player.maxQualitySelector({
@@ -99,6 +117,7 @@ function Movie() {
   return (
     <div className="App">
       <Header />
+      <div id="ambientModeBackground"></div>
       <VideoJS options={options} onReady={handlePlayerReady}/>
     </div>
   );

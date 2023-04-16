@@ -4,11 +4,94 @@ import Header from "./Header";
 import { IoTrashOutline, IoPersonOutline, IoMoveOutline, IoAddCircleOutline, IoCloseOutline, IoFilmOutline, IoVideocamOutline, IoBookOutline, IoGameControllerOutline, IoTvOutline, IoDesktopOutline, IoRefreshOutline } from "react-icons/io5";
 
 
-function EditMovie() {
+function Settings() {
+
+  useEffect(() => {
+    let allLabels = document.querySelectorAll("label");
+    for (let i = 0; i < allLabels.length; i++) {
+      allLabels[i].onclick = function() {
+        let id = this.getAttribute("for");
+        let theIonIcon = this.querySelector('svg');
+        theIonIcon.classList.add('selected');
+        let otherRadios = document.getElementsByClassName("input-hidden")
+        for (let j = 0; j < otherRadios.length; j++) {
+          let otherId = otherRadios[j].id;
+          console.log(`The otherId is ${otherId} and the id is ${id}`)
+          if (otherId !== id) {
+            let otherLabel = document.querySelector('label[for="' + otherId + '"]');
+            let otherIonIcon = otherLabel.querySelector('svg');
+            otherIonIcon.classList.remove('selected');
+          } else {
+            let otherLabel = document.querySelector('label[for="' + otherId + '"]');
+            let otherIonIcon = otherLabel.querySelector('svg');
+            otherIonIcon.classList.add('selected');
+          }
+        } 
+          
+          if (id === "tv") {
+              let pathLabel = document.querySelector('#popupLibrary > div.settingsLibrary > div.libraryPath > label')
+              pathLabel.innerHTML = "M3U Path:"
+
+              let libraryPathInput = document.querySelector('#popupLibrary > div.settingsLibrary > div.libraryPath > input')
+              libraryPathInput.placeholder = "M3U Path"
+          } else {
+              let pathLabel = document.querySelector('#popupLibrary > div.settingsLibrary > div.libraryPath > label')
+              pathLabel.innerHTML = language["path"]+":"
+
+              let libraryPathInput = document.querySelector('#popupLibrary > div.settingsLibrary > div.libraryPath > input')
+              libraryPathInput.placeholder = language["libraryPath"]
+        }
+      }
+    }
+
+    let chocolateServerAdress = getCookie("serverAdress");
+    let personIcon = document.querySelector("#root > div > header > div.headerBottomIcons > a:nth-child(3) > svg").innerHTML;
+    fetch(`${chocolateServerAdress}getAllUsers`, {
+      credentials: "same-origin"
+    })
+      .then(response => response.json())
+      .then(data => {
+        let users = data.users;
+        for (let user of users) {
+          let exist = document.querySelector(`input[username="${user.name}"]`);
+          if (exist) {
+            continue;
+          }
+          let userDiv = document.createElement("div");
+          userDiv.classList.add("user");
+
+          let svg = document.createElement("svg");
+          svg.classList.add("userIcon");
+          svg.innerHTML = personIcon;
+
+          let name = document.createElement("span");
+          name.textContent = user.name;
+
+          let checkbox = document.createElement("input");
+          checkbox.setAttribute("type", "checkbox");
+          checkbox.setAttribute("id", "settingsCheckbox")
+          checkbox.setAttribute("username", user.name);
+          checkbox.classList.add("settingsCheckbox");
+
+          userDiv.appendChild(svg);
+          userDiv.appendChild(name);
+          userDiv.appendChild(checkbox);
+
+          let usersDiv = document.querySelector(".libraryUsers");
+          usersDiv.appendChild(userDiv);
+        }
+      });
+
+  }, [])
 
   function addLibrary() {
     const popupLibrary = document.getElementById("popupLibrary")
     popupLibrary.style.display = "block"
+  }
+
+  function hidePopup() {
+    const popupLibrary = document.getElementById("popupLibrary")
+    popupLibrary.style.display = "none"
   }
 
   function createAccount() {
@@ -69,17 +152,15 @@ function EditMovie() {
       .then(response => response.json())
       .then(data => {
         let users = data.users;
-        let libraries = data.libraries;
-        let libraryUsers = document.getElementsByClassName("allLibraries")[0]
-
-        if (libraryUsers.childElementCount > 0) {
-          return
-        }
-        // Récupération de l"élément parent pour toutes les bibliothèques
+        let libraries = data.libraries;        // Récupération de l"élément parent pour toutes les bibliothèques
         const allLibrariesDiv = document.querySelector(".allLibraries");
 
         // Boucle à travers toutes les bibliothèques
         libraries.forEach(theLibrary => {
+          let exist = document.getElementById(theLibrary.libName);
+          if (exist) {
+            return;
+          }
           // Création de la div pour chaque bibliothèque
           const libraryDiv = document.createElement("div");
           libraryDiv.classList.add("librarySetting");
@@ -190,6 +271,9 @@ function EditMovie() {
           deleteButton.appendChild(trashIcon);
           deleteButton.innerHTML += "Delete";
           deleteButton.classList.add("deleteLibButton");
+          deleteButton.addEventListener("click", () => {
+            deleteLib(theLibrary.libName);
+          });
         
           const saveButton = document.createElement("button");
           saveButton.textContent = "Save changes"
@@ -320,8 +404,79 @@ function EditMovie() {
         allLibrariesDiv.appendChild(div);
       })
     }
-    
-  function newLib() {}
+    function showErrorMessage(message, type) {
+      //if there's already an alert, return
+      if (document.getElementsByClassName("alert").length > 0) {
+          return;
+      }
+      let alert = document.createElement("div");
+      alert.className = "alert";
+      alert.setAttribute("role", "alert");
+      alert.innerHTML = message;
+      document.body.appendChild(alert);
+      setTimeout(function() {
+      alert.className = "alert alert-fade-in alert-" + type;
+      }, 100);
+      
+      setTimeout(function() {
+          alert.classList.add("alert-fade-out");
+          setTimeout(function() {
+              alert.remove();
+          }, 500);
+      }, 4000);
+  }
+    function newLib(){
+      let libType = document.getElementsByClassName("selected")[0]
+      let libTypeParent = libType.parentElement
+      libType = libTypeParent.getAttribute("for")
+      const libName = document.getElementById("libraryName").value
+      const libPath = document.getElementById("libraryPath").value
+      const libUsers = document.getElementsByClassName("settingsCheckbox")
+      let defaultUsers = ""
+      for (let i = 0; i < libUsers.length; i++) {
+          if (libUsers[i].checked) {
+              defaultUsers += ","+libUsers[i].getAttribute("username")
+          }
+      }
+  
+      if (defaultUsers.startsWith(",")) {
+          defaultUsers = defaultUsers.substring(1)
+      }
+  
+      if (libName === "") {
+          showErrorMessage("Please enter a library name !", "alert")
+      }
+      if (libPath === "") {
+          showErrorMessage("Please enter a library path !", "alert")
+      }
+      
+      let chocolateServerAdress = getCookie("serverAdress")
+  
+      if (libName !== "" && libPath !== "") {
+          fetch(chocolateServerAdress+"createLib", {
+              method: "POST",
+              headers: {'Content-Type': 'application/json'}, 
+              body: JSON.stringify({
+                  libName: libName,
+                  libPath: libPath,
+                  libType: libType,
+                  libUsers: defaultUsers
+              })
+            }).then(res => {
+              return res.json()
+            }).then(data => {
+              let error = data.error
+              if (error === "worked") {
+                showErrorMessage("The library has been created !", "success")
+                setTimeout(function() {
+                  window.location.reload()
+                }, 5000);
+              } else {
+                  showErrorMessage("The library already exists !\nPlease choose another name.", "alert")
+              }
+            })
+      }
+  }
 
   function saveSettings() {
     let languageInp = document.getElementById("language").value;
@@ -394,12 +549,63 @@ function EditMovie() {
       }
     })
   }
-
-  function rescanAll() {}
     
+  function deleteLib(libName) {
+    //create a popup to confirm the deletion
+    const popupLibrary = document.createElement("div")
+    document.body.appendChild(popupLibrary)
+    let chocolateServerAdress = getCookie("serverAdress")
+    fetch(`${chocolateServerAdress}deleteLib/${libName}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        //set the form
+        body: JSON.stringify({
+            libName: libName
+        })
+    })
+}
+
+function rescanAll() {
+  let chocolateServerAdress = getCookie("serverAdress")
+  let url = `${chocolateServerAdress}rescanAll`
+  let button = document.getElementById("rescanAllButton")
+  let texts = ["Scanning", "Scanning.", "Scanning..", "Scanning..."]
+  let svg = button.innerHTML.split("</svg>")[0] + "</svg>"
+  button.disabled = true
+
+  //setInterval
+  var i = 0
+  var interval = setInterval(function() {
+      i++
+      if (i === 4) {
+          i = 0
+      }
+      button.innerHTML = `${svg}${texts[i]}`
+  }, 500)
+
+  //fetch with get
+  fetch(url, {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json"
+      }}).then(function(response) {
+          return response.json()
+      }).then(function(data) {
+          console.log(data)
+          if (data === true) {
+              clearInterval(interval)
+              button.innerHTML = '<ion-icon name="refresh-outline"></ion-icon>Done'
+          } else {
+              clearInterval(interval)
+              button.innerHTML = '<ion-icon name="refresh-outline"></ion-icon>Error'
+              button.classList.add("error")
+          }
+      })
+}
 
   const language = JSON.parse(localStorage.getItem("languageFile"));
-  console.log(language)
 
   useEffect(() => {
     getSettings();
@@ -409,7 +615,7 @@ function EditMovie() {
     <div className="App">
       <Header />
       <div id="popupLibrary" className="popupLibrary popup">
-        <IoCloseOutline className="crossPopup" id="crossPopup" />
+        <IoCloseOutline className="crossPopup" id="crossPopup" onClick={hidePopup} />
         <div className="settingsLibrary">
             <div className="libTypeSelect">
                 <input type="radio" name="libtype" id="movies" className="input-hidden" libtype="movies" defaultChecked />
@@ -695,4 +901,4 @@ function EditMovie() {
   );
 }
 
-export default EditMovie;
+export default Settings;

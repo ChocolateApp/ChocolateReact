@@ -57,6 +57,7 @@ function Books() {
                 let bookDiv = document.createElement("div");
                 bookDiv.className = "bookDiv";
                 bookDiv.setAttribute("data-name", book.title);
+                bookDiv.setAttribute("data-type", book.bookType);
                 let bookNameDiv = document.createElement("div");
                 bookNameDiv.className = "bookNameDiv";
                 let bookImageDiv = document.createElement("div");
@@ -72,12 +73,22 @@ function Books() {
                 bookNameDiv.appendChild(bookName);
                 bookDiv.appendChild(bookImageDiv);
                 bookDiv.appendChild(bookNameDiv);
-                bookImageDiv.addEventListener("click", function() {
-                    window.location.href = `/book/${bookID}`;
-                });
-                bookNameDiv.addEventListener("click", function() {
-                    window.location.href = `/book/${bookID}`;
-                });
+                console.log(book)
+                if (book.bookType !== "folder") {
+                    bookImageDiv.addEventListener("click", function() {
+                        window.location.href = `/book/${bookID}`;
+                    });
+                    bookNameDiv.addEventListener("click", function() {
+                        window.location.href = `/book/${bookID}`;
+                    });
+                } else {
+                    bookImageDiv.addEventListener("click", function() {
+                        window.location.href = `/books/${book.libraryName}-${book.title}`;
+                    });
+                    bookNameDiv.addEventListener("click", function() {
+                        window.location.href = `/books/${book.libraryName}-${book.title}`;
+                    });
+                }
                 bookList.appendChild(bookDiv);
             }
         })

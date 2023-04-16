@@ -106,7 +106,15 @@ function Login() {
           })
         .then(response => response.json())
         .then(data => {
-            setAllUsers(data)
+            console.log(data)
+            setAllUsers(data.users)
+            console.log(data.users)
+            if (data.users.length === 0 && data.status === "ok") {
+                console.log("redirecting")
+                if (window.location.pathname === "/login" || window.location.pathname === "/") {
+                    window.location.href = "/createAccount"
+                }
+            }
         })
     }, [])
         

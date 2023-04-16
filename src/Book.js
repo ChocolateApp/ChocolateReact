@@ -85,6 +85,7 @@ function Book() {
 
     // Function to zoom the book
     function zoomBook() {
+        let bookDiv = document.getElementById("bookDiv");
         bookDiv.classList.toggle("bigBookDiv");
         document.getElementById("expandBook").classList.toggle("buttonFullScreenClicked");
         document.getElementById("previous-page").classList.toggle("bigArrowPrev");

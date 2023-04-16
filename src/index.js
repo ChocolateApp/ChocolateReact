@@ -32,6 +32,8 @@ import Actor from "./Actor";
 import EditMovie from "./EditMovie";
 import EditSerie from "./EditSerie";
 
+import AddMedia from "./AddMedia";
+
 import SetServerAdress from "./SetServerAdress";
 import reportWebVitals from "./reportWebVitals";
 
@@ -39,6 +41,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+
+import CreateAccount from "./CreateAccount";
 
 const BrowserRouter = createBrowserRouter([
   {
@@ -132,6 +136,14 @@ const BrowserRouter = createBrowserRouter([
   {
     path: "/settings",
     element: <Settings />,
+  },
+  {
+    path: "/createAccount",
+    element: <CreateAccount />,
+  },
+  {
+    path: "/addMedia",
+    element: <AddMedia />,
   }
 ]);
 
@@ -242,23 +254,15 @@ if (serverCookie === null) {
   })
   .then(response => response.json())
   .then(data => {
-    console.log(data)
-    if (data === false) {
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(
-        <React.StrictMode>
-          <Login />
-          <script src="static/js/main.js"></script>
-        </React.StrictMode>
-      );
-    } else if (cookie === "false" || cookie === null) {
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(
-        <React.StrictMode>
-          <Login />
-          <script src="static/js/main.js"></script>
-        </React.StrictMode>
-      );
+    //if there's no data, and the path doesn't contain /createAccount, render the login page
+    if ((data === false || cookie === "false" || cookie === null) && !window.location.href.includes("/createAccount")) {
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(
+          <React.StrictMode>
+            <Login />
+            <script src="static/js/main.js"></script>
+          </React.StrictMode>
+        );
     } else {
       const root = ReactDOM.createRoot(document.getElementById("root"));
       root.render(

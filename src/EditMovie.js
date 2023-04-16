@@ -21,22 +21,6 @@ function EditMovie() {
     return cookieValue;
   }
 
-  function repairJSON(json) {
-    
-    json = json.replace(/", "/g, "", "");
-    json = json.replace(/\\\\/g, "\\");
-    json = json.replace(/, "/g, ', "');
-    json = json.replace(/: "/g, ': "');
-    json = json.replace(/": /g, '": ');
-    json = json.replace(/"}]/g, '"}]');
-    json = json.replace(/{"/g, '{"');
-    json = json.replace(/False/g, "false");
-    json = json.replace(/True/g, "true");
-    json = json.replace(/None/g, "null");
-    json = json.replace(/\\/g, "")
-
-    return json
-  }
 
 
   function getMovies() {
@@ -64,9 +48,6 @@ function EditMovie() {
         data = data.movies
         for (let i = 0; i < data.length; i++) {
           let film = data[i];
-          film = repairJSON(film)
-          console.log(JSON.stringify(film))
-          film = JSON.parse(film)
           console.log(film)
           console.log(typeof film)
 
@@ -193,9 +174,9 @@ function EditMovie() {
     getMovies();
   }, []);
 
-  const currentHref = window.location.href;
-  const movieName = currentHref.split("/")[4];
-  const libraryName = currentHref.split("/")[5];
+  const currentHref = unescape(window.location.href)
+  const movieName = decodeURIComponent(escape(currentHref.split("/")[4]))
+  const libraryName = decodeURIComponent(escape(currentHref.split("/")[5]))
 
   return (
     <div className="App">

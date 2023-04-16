@@ -6,6 +6,20 @@ import Header from "./Header";
 function App() {
   const language = JSON.parse(localStorage.getItem("languageFile"));
 
+  function checkCanDownload() {
+    let theResponse = "ratio";
+    let chocolateServerAdress = getCookie("serverAdress");
+    fetch(`${chocolateServerAdress}checkDownload`, {
+        credentials: "same-origin"
+        })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        theResponse = data
+        return theResponse
+    })
+}
+
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
@@ -38,12 +52,8 @@ function App() {
       }).then(function(data) {
           let episodes = data["episodes"]
           episodes = Object.entries(episodes)
-          let canDownloadDiv = document.getElementById("canDownloadDiv")
-          let canDownload = canDownloadDiv.getAttribute("data-candownload") === "True"
-          canDownload = true
           let watchNowLanguage = document.getElementsByClassName("watchNowA")[0].innerHTML
           while (watchNowLanguage === "") {
-            //sleep 0.1 seconds
             setTimeout(function(){}, 100);
           }
           for (let i = 0; i < episodes.length; i++) {
@@ -112,6 +122,7 @@ function App() {
                   let episodeButtons = document.createElement("div")
                   episodeButtons.className = "episodeButtons"
                   episodeButtons.appendChild(watchNowButton)
+                  let canDownload = checkCanDownload()
                   if (canDownload) {
                       let downloadNowButton = document.createElement("a")
                       downloadNowButton.className = "downloadNowSeason"
@@ -133,14 +144,17 @@ function App() {
                   let watchNow = document.getElementsByClassName("watchNowA")[0]
 
                   let downloadNowA = document.getElementById("downloadNowA")
-                  canDownloadDiv = document.getElementById("canDownloadDiv")
-                  canDownload = canDownloadDiv.getAttribute("data-candownload") === "True"
-                  canDownload = true
+                  let canDownload = checkCanDownload()
+                  console.log(canDownload)
                   if (canDownload) {
                       let chocolateServerAdress2 = getCookie("serverAdress")
                       downloadNowA.setAttribute("href", chocolateServerAdress2+"downloadEpisode/" + episodeId)
+                      downloadNowA.style.display = "block"
                   } else {
-                      downloadNowA.remove()
+                      try {
+                        downloadNowA.remove()
+                      } catch (error) {
+                      }
                   }
 
 
@@ -156,7 +170,7 @@ function App() {
                   let cssBigBanner = `background-image: linear-gradient(to bottom, rgb(255 255 255 / 0%), rgb(29 29 29)), url("${imageSrc}")`
                   imageBanner.setAttribute("style", cssBigBanner)
 
-                  titleBanner.innerHTML = "EP 1 - " + episode.episodeName
+                  titleBanner.innerHTML = `EP${episode["episodeNumber"]} - ${episode["episodeName"]}`
                   let description = episode.episodeDescription
                   descriptionBanner.innerHTML = description
                   descriptionBanner.innerHTML = descriptionBanner.innerHTML.substring(0, 200) + "..."
@@ -191,13 +205,12 @@ function App() {
           <IoPlayOutline className="watchNow" />
           {language["watchNow"] }
         </a>
-        <a className="downloadNowA" id="downloadNowA" href="/">
+        <a className="downloadNowA" id="downloadNowA" href="/" style={{ display: "none" }}>
           <IoDownloadOutline className="downloadNow"/>
           {language["downloadButton"]}
         </a>
       </div>
       <div className="episodes"></div>
-      <div id="canDownloadDiv" data-candownload="True"></div>
     </div>
   );
 }

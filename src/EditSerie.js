@@ -21,40 +21,14 @@ function EditSerie() {
     return cookieValue;
   }
 
-  function repairJSON(json) {
-    let replaceObj = {
-      "{'": '{"',
-      "'}": '"}',
-      "': ": '": ',
-      ", '": ', "',
-      "\": '": '": "',
-      "', \"": '", "',
-      "\\'": "'",
-      "False": "false",
-      "True": "true",
-      "None": "null",
-      "['": '["',
-      "'],": '"],',
-    }
-
-    for (let key in replaceObj) {
-      while (json.includes(key)) {
-        json = json.replace(key, replaceObj[key])
-      }
-    }
-
-    return json
-  }
-
-
   function getSeries() {
     let chocolateServerAdress = getCookie("serverAdress");
 
-    const currentHref = window.location.href;
-    const serieName = currentHref.split("/")[4];
-    const library = currentHref.split("/")[5];
+    const currentHref = unescape(window.location.href)
+    const serieName = decodeURIComponent(escape(currentHref.split("/")[4]))
+    const libraryName = decodeURIComponent(escape(currentHref.split("/")[5]))
 
-    let url = `${chocolateServerAdress}/editSerie/${serieName}/${library}`;
+    let url = `${chocolateServerAdress}editSerie/${serieName}/${libraryName}`;
 
     //for all serie finded
     let destinationDIV = document.getElementsByClassName("editSerieDiv")[0];
@@ -71,10 +45,8 @@ function EditSerie() {
       .then(data => {
         for (let i = 0; i < data.length; i++) {
           let serie = data[i];
-          serie = repairJSON(serie)
           console.log(serie)
-          serie = JSON.parse(serie)
-          console.log(serie)
+          console.log(typeof serie)
 
           let serieFindedDiv = document.createElement("div");
           serieFindedDiv.className = "serieFinded";
@@ -100,14 +72,16 @@ function EditSerie() {
           serieFindedDiv.addEventListener("click", function() {
             let serieID = serieFindedDiv.id
             let chocolateServerAdress = getCookie("serverAdress");
-            let method = "POST";
-            let url = `${chocolateServerAdress}/editSerie/${serieName}/${libraryName}`;
+
+            let url = `${chocolateServerAdress}editSerie/${serieName}/${libraryName}`;
+
             let body = {
               "newSerieID": serieID
             }
+
             fetch(url, {
               credentials: "same-origin",
-              method: method,
+              method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
@@ -201,12 +175,9 @@ function EditSerie() {
     getSeries();
   }, []);
 
-  const currentHref = window.location.href;
-  let serieName = currentHref.split("/")[4]
-  while (serieName.includes("%20")) {
-    serieName = serieName.replace("%20", " ")
-  }
-  const libraryName = currentHref.split("/")[5];
+  const currentHref = unescape(window.location.href)
+  const serieName = decodeURIComponent(escape(currentHref.split("/")[4]))
+  const libraryName = decodeURIComponent(escape(currentHref.split("/")[5]))
 
   return (
     <div className="App">
