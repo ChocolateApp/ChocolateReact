@@ -57,6 +57,17 @@ function CreateAccount() {
     }
 })
 
+  if (language === null) {
+    fetch(getCookie("serverAdress")+"/languageFile", {
+      credentials: "same-origin"
+    })
+    .then(response => response.json())
+    .then(data => {
+      localStorage.setItem("languageFile", JSON.stringify(data));
+      window.location.reload();
+    });
+  }
+
   return (
     <div className="App">
       <div className="createAccount" id="createAccount">
