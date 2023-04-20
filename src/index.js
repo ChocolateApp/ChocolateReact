@@ -1,40 +1,40 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import "./App.css";
+import "./Components/Shared/App.css";
 
 import App from "./App";
 
-import Login from "./Login";
-import Logout from "./Logout";
-import Profil from "./Profil";
+import Login from "./Components/Pages/Login";
+import Logout from "./Components/Pages/Logout";
+import Profil from "./Components/Pages/Profil";
 
-import Settings from "./Settings";
+import Settings from "./Components/Pages/Settings";
 
-import Movies from "./Movies";
-import Series from "./Series";
-import Books from "./Books";
-import Season from "./Season";
-import Other from "./Other";
-import Consoles from "./Consoles";
-import Games from "./Games";
-import TvChannels from "./TvChannels";
+import Movies from "./Components/Pages/Movies";
+import Series from "./Components/Pages/Series";
+import Books from "./Components/Pages/Books";
+import Season from "./Components/Pages/Season";
+import Other from "./Components/Pages/Other";
+import Consoles from "./Components/Pages/Consoles";
+import Games from "./Components/Pages/Games";
+import TvChannels from "./Components/Pages/TvChannels";
 
-import Movie from "./Movie";
-import Episode from "./Episode";
-import Book from "./Book";
-import OtherVideo from "./OtherVideo";
-import Game from "./Game";
-import Tv from "./Tv";
+import Movie from "./Components/Pages/Movie";
+import Episode from "./Components/Pages/Episode";
+import Book from "./Components/Pages/Book";
+import OtherVideo from "./Components/Pages/OtherVideo";
+import Game from "./Components/Pages/Game";
+import Tv from "./Components/Pages/Tv";
 
-import Actor from "./Actor";
+import Actor from "./Components/Pages/Actor";
 
-import EditMovie from "./EditMovie";
-import EditSerie from "./EditSerie";
+import EditMovie from "./Components/Pages/EditMovie";
+import EditSerie from "./Components/Pages/EditSerie";
 
-import AddMedia from "./AddMedia";
+import AddMedia from "./Components/Pages/AddMedia";
 
-import SetServerAdress from "./SetServerAdress";
+import SetServerAdress from "./Components/Pages/SetServerAdress";
 import reportWebVitals from "./reportWebVitals";
 
 import {
@@ -42,7 +42,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import CreateAccount from "./CreateAccount";
+import CreateAccount from "./Components/Pages/CreateAccount";
 
 const BrowserRouter = createBrowserRouter([
   {

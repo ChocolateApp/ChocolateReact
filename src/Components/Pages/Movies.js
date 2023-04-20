@@ -1,9 +1,8 @@
-import "./App.css";
-import Header from "./Header";
-import Popup from "./Popup";
+import Header from "./../Shared/Header";
+import Popup from "../Shared/Popup"
 import { IoRefreshOutline, IoFunnelOutline, IoPlayOutline, IoDownloadOutline, IoPencilOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
-import Loading from "./Loading";
+import Loading from "./../Shared/Loading";
 
 function Movies() {
 

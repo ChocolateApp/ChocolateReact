@@ -1,6 +1,4 @@
-import "./App.css";
-import Header from "./Header";
-import Popup from "./Popup";
+import Header from "./../Shared/Header";
 import { useEffect } from "react";
 
 function Actor() {

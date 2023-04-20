@@ -1,5 +1,3 @@
-import "./App.css";
-
 function SetServerAdress() {
     function getStart(serverAdress) {
         var xhr = new XMLHttpRequest();

@@ -1,4 +1,3 @@
-import "./App.css";
 
 function Logout() {
     function delete_cookie(name) {

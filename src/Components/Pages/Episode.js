@@ -1,9 +1,8 @@
 import React from "react";
-import "./App.css";
-import Header from "./Header";
+import Header from "./../Shared/Header";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import VideoJS from "./VideoJS";
+import VideoJS from "./../Shared/VideoJS";
 import { useEffect } from "react";
 //import "./static/js/videoJS/videojs.hotkeys.js";
 //import "./static/js/videoJS/videojs-mobile-ui.js";

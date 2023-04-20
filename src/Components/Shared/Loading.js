@@ -1,4 +1,4 @@
-import loading from "./images/loader.gif";
+import loading from "./../../images/loader.gif";
 import "./App.css";
 
 function Loading() {

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import "./App.css";
-import Header from "./Header";
+import Header from "./../Shared/Header";
 import { IoTrashOutline, IoPersonOutline, IoMoveOutline, IoAddCircleOutline, IoCloseOutline, IoFilmOutline, IoVideocamOutline, IoBookOutline, IoGameControllerOutline, IoTvOutline, IoDesktopOutline, IoRefreshOutline } from "react-icons/io5";
 
 

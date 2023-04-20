@@ -1,4 +1,3 @@
-import "./App.css";
 import { useEffect } from "react";
 
 function CreateAccount() {

@@ -1,8 +1,7 @@
 import React from "react";
-import "./App.css";
-import Header from "./Header";
+import Header from "./../Shared/Header";
 import { useEffect } from "react";
-import brokenBanner from "./images/brokenBanner.webp"
+import brokenBanner from "./../../images/brokenBanner.webp"
 
 
 function TvChannels() {

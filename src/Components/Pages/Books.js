@@ -1,6 +1,5 @@
-import "./App.css";
-import Header from "./Header";
-import Loading from "./Loading";
+import Header from "./../Shared/Header";
+import Loading from "./../Shared/Loading";
 import { useEffect } from "react";
 
 function Books() {

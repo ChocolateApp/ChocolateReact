@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
-import Header from "./Header";
+import Header from "./../Shared/Header";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import VideoJS from "./VideoJS";
-import Loading from "./Loading";
+import VideoJS from "./../Shared/VideoJS";
+import Loading from "./../Shared/Loading";
 
 function Tv() {
   const [isLoading, setIsLoading] = useState(true);

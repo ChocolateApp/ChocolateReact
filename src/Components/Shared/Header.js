@@ -1,4 +1,4 @@
-import logo from "./images/logo.png";
+import logo from "./../../images/logo.png";
 import "./App.css";
 import { IoSearchOutline, IoCogOutline, IoHomeOutline, IoAddOutline, IoLogOutOutline, IoPersonOutline, IoFilmOutline, IoVideocamOutline, IoBookOutline, IoGameControllerOutline, IoHeadsetOutline, IoTvOutline, IoDesktopOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";

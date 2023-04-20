@@ -1,6 +1,5 @@
-import "./App.css";
-import Header from "./Header";
-import Popup from "./Popup";
+import Header from "./../Shared/Header";
+import Popup from "../Shared/Popup"
 import { IoRefreshOutline, IoFunnelOutline, IoPlayOutline, IoPencilOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";

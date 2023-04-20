@@ -1,8 +1,7 @@
-import logo from "./images/logo.png";
-import "./App.css";
+import logo from "./../../images/logo.png";
 import { IoCloseOutline } from "react-icons/io5";
 import { useState, useRef } from "react";
-import { POST } from "./static/js/fetch.js";
+import { POST } from "./../../static/js/fetch.js";
 
 function Login() {
       

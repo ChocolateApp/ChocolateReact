@@ -1,7 +1,6 @@
-import "./App.css";
 import { IoPlayOutline, IoDownloadOutline } from "react-icons/io5";
 import { useEffect } from "react";
-import Header from "./Header";
+import Header from "./../Shared/Header";
 
 function App() {
   const language = JSON.parse(localStorage.getItem("languageFile"));

@@ -1,8 +1,7 @@
 import { IoPlayOutline, IoDownloadOutline, IoRefreshOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Header from "./Header";
-import "./App.css";
+import Header from "./../Shared/Header";
 
 function Other() {
     const { libName } = useParams();

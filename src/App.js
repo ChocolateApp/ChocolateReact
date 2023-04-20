@@ -1,8 +1,8 @@
-import "./App.css";
+import "./Components/Shared/App.css"
 import { IoFilmOutline, IoVideocamOutline, IoBookOutline, IoGameControllerOutline, IoHeadsetOutline, IoTvOutline, IoDesktopOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Header from "./Header";
+import Header from "./Components/Shared/Header";
 
 function App() {
   const [allLibrary, setAllLibrary] = useState([]);

@@ -1,5 +1,4 @@
-import "./App.css";
-import Header from "./Header";
+import Header from "./../Shared/Header";
 //import Loading from "./Loading";
 import { IoChevronForwardOutline, IoChevronBackOutline, IoExpandOutline } from "react-icons/io5";
 import { useEffect } from "react";
