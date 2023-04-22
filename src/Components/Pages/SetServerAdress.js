@@ -1,4 +1,8 @@
 function SetServerAdress() {
+    if (process.env.REACT_APP_FORCED_SERVER_ADRESS !== undefined && process.env.REACT_APP_FORCED_SERVER_ADRESS !== "") {
+        setServerAdress(process.env.REACT_APP_FORCED_SERVER_ADRESS);
+    }
+
     function getStart(serverAdress) {
         var xhr = new XMLHttpRequest();
         try {
@@ -32,9 +36,12 @@ function SetServerAdress() {
         return cookieValue;
       }
 
-    function setServerAdress() {
+    function setServerAdress(serverAdress="") {
 
-        let serverAdress = document.getElementById("serverAdress").value;
+        if (serverAdress === "") {
+            serverAdress = document.getElementById("serverAdress").value;
+        }
+
         while ("https://" === serverAdress.substring(0, 8)) {
             serverAdress = serverAdress.substring(8);
         }
