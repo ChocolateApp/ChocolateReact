@@ -77,10 +77,14 @@ function Movie() {
   const options = {
     autoplay: true,
     controls: true,
+    preload: "none",
     sources: [{
       src: sourceURL,
       type: "application/x-mpegURL"
-    }]
+    }],
+    html5: {
+      nativeTextTracks: false
+    },
   };
   
   const handlePlayerReady = (player, setUrl) => {
@@ -97,6 +101,8 @@ function Movie() {
       handleTimeUpdate()
       //ambientMode(player)
     });
+
+    
     /*
     player.maxQualitySelector({
       "defaultQuality": 2,
@@ -117,7 +123,7 @@ function Movie() {
     <div className="App">
       <Header />
       <div id="ambientModeBackground"></div>
-      <VideoJS options={options} onReady={handlePlayerReady}/>
+      <VideoJS options={options} onReady={handlePlayerReady} />
     </div>
   );
   
