@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
 
 import { ReactNotifications } from 'react-notifications-component';
 
@@ -37,97 +37,6 @@ import Profil from './Pages/Profil';
 
 import "./App.css";
 
-const BrowserRouterConfig = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home />,
-  },
-  {
-    path: '/movies/:lib',
-    element: <Movies />,
-  },
-  {
-    path: '/series/:lib',
-    element: <Series />,
-  },
-  {
-    path: '/season/:id',
-    element: <Season />,
-  },
-  {
-    path: '/books/:lib',
-    element: <Books />,
-  },
-  {
-    path: '/others/:lib',
-    element: <Others />,
-  },
-  {
-    path: '/tv/:lib',
-    element: <TVs />,
-  },
-  {
-    path: '/consoles/:lib',
-    element: <Consoles />,
-  },
-  {
-    path: '/musics/:lib',
-    element: <Musics />,
-  },
-  {
-    path: '/console/:lib/:console',
-    element: <Console />,
-  },
-  {
-    path: '/album/:lib/:id',
-    element: <Album />,
-  },
-  {
-    path: '/playlist/:lib/:id',
-    element: <Playlist />,
-  },
-  {
-    path: '/artist/:lib/:id',
-    element: <Artist />,
-  },
-  {
-    path: '/movie/:id',
-    element: <Movie />,
-  },
-  {
-    path: '/episode/:id',
-    element: <Episode />,
-  },
-  {
-    path: '/other/:id',
-    element: <Other />,
-  },
-  {
-    path: '/book/:id',
-    element: <Book />,
-  },
-  {
-    path: '/channel/:lib/:id',
-    element: <Channel />,
-  },
-  {
-    path: '/game/:lib/:console/:id',
-    element: <Game />,
-  },
-  {
-    path: '/logout',
-    element: <Logout />,
-  },
-  {
-    path: '/settings',
-    element: <Settings />,
-  },
-  {
-    path: '/profil',
-    element: <Profil />,
-  }
-]);
-
 const useAudioPlayerStore = create((set) => ({
   visible: false,
   setVisible: (visible) => set({ visible }),
@@ -164,7 +73,7 @@ function CheckLogin() {
       if (resMsg.status === 'ok') {
         let username = resMsg.username;
         let account_type = resMsg.account_type;
-        let id = resMsg.accountId;
+        let id = resMsg.account_id;
 
         localStorage.setItem('username', username);
         localStorage.setItem('account_type', account_type);
@@ -184,21 +93,58 @@ const App = () => {
     AOS.init();
   }, []);
 
-  const isAuthenticated = localStorage.getItem('token') !== null;
 
   return (
-    <RouterProvider router={BrowserRouterConfig}>
+    <BrowserRouter>
       <ReactNotifications />
-      {isAuthenticated ? (
-        <>
-          <CheckLogin />
-          <AudioPlayer store={useAudioPlayerStore} />
-          <Header />
-        </>
-      ) : (
-        <Login />
-      )}
-    </RouterProvider>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/movies/:lib" element={<Movies />} />
+          <Route path="/series/:lib" element={<Series />} />
+          <Route path="/season/:id" element={<Season />} />
+          <Route path="/books/:lib" element={<Books />} />
+          <Route path="/others/:lib" element={<Others />} />
+          <Route path="/tv/:lib" element={<TVs />} />
+          <Route path="/consoles/:lib" element={<Consoles />} />
+          <Route path="/musics/:lib" element={<Musics />} />
+          <Route path="/console/:lib/:console" element={<Console />} />
+          <Route path="/album/:lib/:id" element={<Album />} />
+          <Route path="/playlist/:lib/:id" element={<Playlist />} />
+          <Route path="/artist/:lib/:id" element={<Artist />} />
+          <Route path="/movie/:id" element={<Movie />} />
+          <Route path="/episode/:id" element={<Episode />} />
+          <Route path="/other/:id" element={<Other />} />
+          <Route path="/book/:id" element={<Book />} />
+          <Route path="/channel/:lib/:id" element={<Channel />} />
+          <Route path="/game/:lib/:console/:id" element={<Game />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/profil" element={<Profil />} />
+        </Routes>
+      </Layout>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+      </Routes>
+        
+    </BrowserRouter>
+  );
+};
+
+export const Layout = ({ children }) => {
+
+  const isAuthenticated = localStorage.getItem('token') !== null;
+
+  return isAuthenticated ? (
+    <>
+      <CheckLogin />
+      <AudioPlayer store={useAudioPlayerStore} />
+      <Header />
+      {children}
+    </>
+  ) : (
+    <Login />
   );
 };
 
