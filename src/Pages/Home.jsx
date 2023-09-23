@@ -4,10 +4,7 @@ import Loading from '../Components/Shared/Loading';
 import { useGet } from "../Utils/Fetch";
 
 export default function Home() {
-
     const { data: allLibraries } = useGet(`${process.env.REACT_APP_DEV_URL}/get_all_libraries`)
-
-
 
     return (
         <>
@@ -24,7 +21,6 @@ export default function Home() {
                 ) : <Loading />}
 
             </div>
-
         </>
     );
 }

@@ -4,10 +4,17 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 
-export default function SerieCard({ name, library, url, onClick, percent }) {
+export default function SerieCard({ name, library, onClick, note, id }) {
 
     const navigate = useNavigate();
     
+
+    function toFixedIfNecessary( value, dp ){
+        return +parseFloat(value).toFixed( dp );
+    }
+
+    let percent = toFixedIfNecessary(note * 10, 1);
+
     let hue;
         if (percent < 50) {
             hue = percent * 1.2; // Teinte allant de 0 à 60
@@ -25,8 +32,8 @@ export default function SerieCard({ name, library, url, onClick, percent }) {
                 textColor: '#fff',
                 trailColor: 'transparent'
             })} />
-            <IoPencilOutline className="edit-icon" onClick={() => navigate(`/edit_serie/${name}/${library}`)} />
-            <img src={url} alt={name} loading="lazy" onError={({ currentTarget }) => {currentTarget.onerror = null; currentTarget.src=`${process.env.REACT_APP_DEV_URL}/static/img/broken.webp`}} />
+            <IoPencilOutline className="edit-icon" onClick={() => navigate(`/edit_serie/${id}/${library}`)} />
+            <img src={`${process.env.REACT_APP_DEV_URL}/serie_cover/${id}`} alt={name} loading="lazy" onError={({ currentTarget }) => {currentTarget.onerror = null; currentTarget.src=`${process.env.REACT_APP_DEV_URL}/static/img/broken.webp`}} />
         </div>
     );
 }

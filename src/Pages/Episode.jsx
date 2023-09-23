@@ -1,12 +1,13 @@
+import { useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import Video from "../Components/Shared/Video";
-import { useRef } from "react";
-import JustCog from "../Components/Shared/JustCog";
-import { useGet } from "../Utils/Fetch";
-import Buttons from "../Components/Shared/Buttons";
 
+import { useGet } from "../Utils/Fetch";
+
+import Video from "../Components/Shared/Video";
+import JustCog from "../Components/Shared/JustCog";
+import Buttons from "../Components/Shared/Buttons";
 import Back from "../Components/Shared/Back";
 
 export default function Movie() {
@@ -23,7 +24,7 @@ export default function Movie() {
     const { data: canIPlayEpisode } = useGet(`${process.env.REACT_APP_DEV_URL}/can_i_play_episode/${id}`)
 
     if (canIPlayEpisode !== null && canIPlayEpisode !== undefined) {
-        if (canIPlayEpisode.canIPlay === false) {
+        if (canIPlayEpisode.can_I_play === false) {
             navigate('/')
         }
     }
@@ -61,17 +62,17 @@ export default function Movie() {
     return (
         <>
             <JustCog />
-            <Back path={"/season/"+episode?.seasonId} />
-            <h1 className="videoTitle">EP{episode?.episodeNumber} - {episode?.episodeName}</h1>
+            <Back path={"/season/"+episode?.season_id} />
+            <h1 className="videoTitle">EP{episode?.episode_number} - {episode?.episode_name}</h1>
             <Video options={options} onReady={handlePlayerReady} />
             <div className="episodeButtons">
-                { episode?.previousEpisode ? (
-                    <Buttons text="Previous episode" onClick={() => navigate("/episode/"+episode?.previousEpisode)} />
+                { episode?.previous_episode ? (
+                    <Buttons text="Previous episode" onClick={() => navigate("/episode/"+episode?.previous_episode)} />
                 ) : (
                     <div></div>
                 ) }
-                { episode?.nextEpisode ? (
-                    <Buttons text="Next episode" onClick={() => navigate("/episode/"+episode?.nextEpisode)} /> 
+                { episode?.next_episode ? (
+                    <Buttons text="Next episode" onClick={() => navigate("/episode/"+episode?.next_episode)} /> 
                 ) : (
                     <div></div>
                 ) }

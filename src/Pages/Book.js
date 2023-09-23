@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import { useGet } from "../Utils/Fetch";
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, {
@@ -7,11 +6,14 @@ import SwiperCore, {
   Keyboard,
   Pagination,
 } from 'swiper';
-
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/keyboard';
 import 'swiper/css/pagination';
+
+import { useGet } from "../Utils/Fetch";
+
+import Back from "../Components/Shared/Back";
 
 export default function Book() {
     const { id } = useParams()
@@ -22,6 +24,7 @@ export default function Book() {
 
     return (
         <>
+            <Back />
             {book && (
                 <div className="book">
                     <Swiper
@@ -34,9 +37,9 @@ export default function Book() {
                         keyboard
                         className="book-container"
                         >
-                        {Array.from({ length: book.nbPages }, (_, index) => (
+                        {Array.from({ length: book.nb_pages }, (_, index) => (
                             <SwiperSlide key={index}>
-                                <img src={`${process.env.REACT_APP_DEV_URL}/bookUrl/${id}/${index}`} alt={`Page ${index}`} className="book-img" />
+                                <img src={`${process.env.REACT_APP_DEV_URL}/book_url/${id}/${index}`} alt={`Page ${index}`} className="book-img" />
                             </SwiperSlide>
                         ))}
                     </Swiper>

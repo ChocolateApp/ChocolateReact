@@ -60,7 +60,7 @@ export default function Playlist() {
         <div className="playlist-div">
           <div className="playlist-data">
             <div className="playlist-cover">
-              <img src={`${process.env.REACT_APP_DEV_URL}/${playlist?.cover}`} alt="playlist cover" />
+              <img src={`${process.env.REACT_APP_DEV_URL}/playlist_cover/${playlist?.id}`} alt="playlist cover" />
             </div>
             <div className="playlist-infos">
               <h1>{playlist?.name}</h1>

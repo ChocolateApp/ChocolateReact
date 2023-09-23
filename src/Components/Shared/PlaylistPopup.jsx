@@ -51,7 +51,7 @@ export default function PlaylistPopup({ trackId, hidePlaylistPopup }) {
                             )
                         })}
                     </div>
-                    <Buttons icon={<HiPlus />} text="Playlist" type="playlist-create" onClick={() => setShowCreatePopup(true)} />
+                    <Buttons icon={<HiPlus />} text="Playlist" type="playlist-create small" onClick={() => setShowCreatePopup(true)} />
                 </div>
             </div>
             {showCreatePopup && <PlaylistCreatePopup setShowCreatePopup={setShowCreatePopup} trackId={trackId} />}

@@ -60,7 +60,7 @@ export default function Artist() {
         <div className="artist-div">
           <div className="artist-data">
             <div className="artist-cover">
-              <img src={`${process.env.REACT_APP_DEV_URL}/${artist?.cover}`} alt="artist cover" />
+              <img src={`${process.env.REACT_APP_DEV_URL}/artist_image/${id}`} alt="artist cover" />
             </div>
             <div className="artist-infos">
               <h1>{artist?.name}</h1>

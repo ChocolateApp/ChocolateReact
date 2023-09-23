@@ -6,7 +6,7 @@ export function Error({ title, message }) {
         message: message ?? "An error has occurred",
         type: "danger",
         insert: "top",
-        container: "top-right",
+        container: "top-left",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
         dismiss: {
@@ -22,7 +22,7 @@ export function Success({ title, message }) {
         message: message ?? "Success",
         type: "success",
         insert: "top",
-        container: "top-right",
+        container: "top-left",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
         dismiss: {
@@ -38,7 +38,7 @@ export function Warning({ title, message }) {
         message: message ?? "Warning",
         type: "warning",
         insert: "top",
-        container: "top-right",
+        container: "top-left",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
         dismiss: {
@@ -54,7 +54,7 @@ export function Info({ title, message }) {
         message: message ?? "Info",
         type: "info",
         insert: "top",
-        container: "top-right",
+        container: "top-left",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
         dismiss: {
@@ -70,7 +70,7 @@ export function Default({ title, message }) {
         message: message ?? "Default",
         type: "default",
         insert: "top",
-        container: "top-right",
+        container: "top-left",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
         dismiss: {

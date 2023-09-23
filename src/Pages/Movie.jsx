@@ -19,7 +19,7 @@ export default function Movie() {
     const navigate = useNavigate()
 
     if (canIPlayMovie !== null && canIPlayMovie !== undefined) {
-        if (canIPlayMovie.canIPlay === false) {
+        if (canIPlayMovie.can_I_play === false) {
             navigate('/')
         }
     }

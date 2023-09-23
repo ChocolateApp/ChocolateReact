@@ -1,82 +1,72 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+const injectScripts = (core, rom_path, bios) => {
+  if (window.EJS_emulator || window.EmulatorJS) return;
+  window.EJS_player = '#game';
+  window.EJS_core = core;
+  window.EJS_gameUrl = rom_path;
+
+  if (bios) {
+    window.EJS_biosUrl = 'path_to_bios';
+  }
+  
+  const script = document.createElement('script');
+  script.src = "https://www.emulatorjs.com/loader.js";
+  document.body.appendChild(script);
+}
 
 export default function Game() {
   const { console, id } = useParams();
-  const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [reloadPage, setReloadPage] = useState(false);
+  const [core, setCore] = useState(null);
+  const [rom_path, setRomPath] = useState(null);
+  const [bios, setBios] = useState(null);
 
-  const gameFile = `${process.env.REACT_APP_DEV_URL}/game_file/${id}`;
-
-  useLayoutEffect(() => {
-    const scripts = {
-      GB: 'let EJS_player = "#game";\nlet EJS_biosUrl = "";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "gb";',
-      GBA: 'let EJS_player = "#game";\nlet EJS_biosUrl = "";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "gba";',
-      GBC: 'let EJS_player = "#game";\nlet EJS_biosUrl = "";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "gb";',
-      N64: 'let EJS_player = "#game";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "n64";',
-      NES: 'let EJS_player = "#game";\nlet EJS_biosUrl = "";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "nes";\nEJS_lightgun = false;',
-      NDS: 'let EJS_player = "#game";\nlet EJS_biosUrl = "";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "nds";',
-      SNES: 'let EJS_player = "#game";\nlet EJS_biosUrl = "";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "snes";\nEJS_mouse = false;\nEJS_multitap = false;',
-      "Sega Mega Drive": 'let EJS_player = "#game";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "segaMD";',
-      "Sega Master System": 'let EJS_player = "#game";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "segaMS";',
-      "Sega Saturn": 'let EJS_player = "#game";\nlet EJS_biosUrl = "";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "segaSaturn";',
-      PS1: 'let EJS_player = "#game";\nlet EJS_biosUrl = "{bios}";\nlet EJS_gameUrl = "{slug}";\nlet EJS_core = "psx";',
-    };
-
-    let theConsole = scripts[console].replace("{slug}", gameFile);
-
-    if (theConsole.includes("{bios}")) {
-      let bios = `${process.env.REACT_APP_DEV_URL}/bios/${console}`;
-      theConsole = theConsole.replace("{bios}", bios);
+  useEffect(() => {
+    const cores = {
+      GB: 'gambatte',
+      GBA: 'mgba',
+      GBC: 'mgba',
+      N64: 'mupen64plus_next',
+      NES: 'nes',
+      NDS: 'melonds',
+      SNES: 'snes9x',
+      "Sega Mega Drive": 'genesis_plus_gx',
+      "Sega Master System": 'genesis_plus_gx',
+      "Sega Saturn": 'yabause',
+      PS1: 'pcsx_rearmed',
+    }
+    
+    const bioses = {
+      GB: null,
+      GBA: null,
+      GBC: null,
+      N64: null,
+      NES: null,
+      NDS: `${process.env.REACT_APP_DEV_URL}/bios/NDS`,
+      SNES: null,
+      "Sega Mega Drive": null,
+      "Sega Master System": null,
+      "Sega Saturn": null,
+      PS1: `${process.env.REACT_APP_DEV_URL}/bios/PS1`
     }
 
-    const script = document.createElement('script');
-    script.innerHTML = theConsole;
-    script.defer = true;
-    script.id = 'gameScript';
-    script.type = 'text/javascript';
+    let core = cores[console];
+    setCore(core);
+    setRomPath(`${process.env.REACT_APP_DEV_URL}/game_file/${id}`)
 
-    const emulatorJSScript = document.createElement('script');
-    emulatorJSScript.src = 'https://www.emulatorjs.com/loader.js';
-    emulatorJSScript.defer = true;
-    emulatorJSScript.id = 'emulatorScript';
-
-    const loadEmulator = () => {
-      const gameScript = document.getElementById('gameScript');
-      const emulatorScript = document.getElementById('emulatorScript');
-
-      if (!gameScript) {
-        document.body.appendChild(script);
-      }
-
-      if (!emulatorScript) {
-        document.body.appendChild(emulatorJSScript);
-      }
-
-      setScriptLoaded(true);
-    };
-
-    if (!scriptLoaded) {
-      loadEmulator();
+    if (bioses[console]) {
+      setBios(bioses[console]);
+    } else {
+      setBios(null);
     }
-  }, [console, gameFile, scriptLoaded]);
+  }, [console, id]);
 
-  useLayoutEffect(() => {
-    if (reloadPage) {
-      setReloadPage(false);
-      window.location.reload();
-    }
-  }, [reloadPage]);
-
-  const handleReloadPage = () => {
-    setReloadPage(true);
-  };
 
   return (
     <>
+      {core && rom_path && injectScripts(core, rom_path, bios)}
       <div className="game" id="game"></div>
-      <button onClick={handleReloadPage} className="button reload-button">Reload Page</button>
     </>
   );
 }

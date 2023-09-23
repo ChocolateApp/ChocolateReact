@@ -1,9 +1,14 @@
 import { useState } from "react";
 import Buttons from "./Buttons";
-import { IoPlayOutline } from "react-icons/io5";
+import { IoPlayOutline, IoRefreshOutline } from "react-icons/io5";
+import { useParams } from "react-router-dom";
+import { usePost } from "../../Utils/Fetch";
 
-export default function SerieBanner({ name, url, description, showPopup }) {
+export default function SerieBanner({ name, id, description, showPopup, full_banner=false }) {
     const [showBigDescription, setShowBigDescription] = useState(false);
+
+    const { handleSubmit } = usePost()
+    const { lib } = useParams()
 
     function toggleDescription() {
         setShowBigDescription(!showBigDescription);
@@ -27,14 +32,26 @@ export default function SerieBanner({ name, url, description, showPopup }) {
         }
     }
 
+    
+    function refresh() {
+        handleSubmit({
+            url:`${process.env.REACT_APP_DEV_URL}/rescan/${lib}`
+        })
+    }
+
     return (
-        <div className="big-banner" data-aos="fade-down">
-            <div src={url} style={{ backgroundImage: `linear-gradient(transparent, rgb(29, 29, 29)), url("${url}")` }} className="banner"></div>
+        <div className={`big-banner ${full_banner ? "full-banner" : ""}`} data-aos="fade-down">
+            <div style={{ backgroundImage: `linear-gradient(transparent, rgb(29, 29, 29)), url("${process.env.REACT_APP_DEV_URL}/serie_banner/${id}")` }}  className="banner"></div>
             <div className="banner-data">
                 <h1>{name}</h1>
                 {getDescription(description)}
                 <div className="banner-buttons">
-                    <Buttons icon={<IoPlayOutline />} text="Watch now" onClick={showPopup} />
+                    <div className="banner-buttons-left">
+                        <Buttons icon={<IoPlayOutline />} text="Watch now" onClick={showPopup} />
+                    </div>
+                    <div className="banner-buttons-right">
+                        <Buttons icon={<IoRefreshOutline />} text="Refresh" onClick={refresh} />
+                    </div>
                 </div>
             </div>
         </div>

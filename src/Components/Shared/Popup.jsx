@@ -1,12 +1,15 @@
 import { IoCloseOutline, IoPlayOutline, IoDownloadOutline } from "react-icons/io5";
-import { useGet, usePost } from "../../Utils/Fetch";
 import { useNavigate, Link  } from "react-router-dom";
 import { useState } from "react";
 
+import { useGet, usePost } from "../../Utils/Fetch";
+
 import { librariesIcons } from "./LibrariesIcons";
+import Loading from "./Loading";
 import Buttons from "./Buttons";
 import CastMember from "./CastMember";
 import { Success } from './Notifications';
+import { useLangage } from "../../Utils/useLangage";
 
 export function PopupMovie({ onClose, id }) {
 
@@ -25,36 +28,36 @@ export function PopupMovie({ onClose, id }) {
     return (
         <div id="popup" className="popup">
             <IoCloseOutline className="crossPopup" id="crossPopup" onClick={onClose} />
-            {data && (
+            {data ? (
                 <div className="popupContent">
                     <div className="popup-left">
-                        <img src={`${process.env.REACT_APP_DEV_URL}/${data.cover}`} alt={data.realTitle} className="coverPopup" />
+                        <img src={`${process.env.REACT_APP_DEV_URL}/movie_cover/${data.id}`} alt={data.real_title} className="coverPopup" onError={({ currentTarget }) => {currentTarget.onerror = null; currentTarget.src=`${process.env.REACT_APP_DEV_URL}/static/img/broken.webp`}} />
                     </div>
                     <div className="popup-right">
-                        <p className="titlePopup">{data.realTitle}</p>
+                        <p className="titlePopup">{data.real_title}</p>
                         <p className="descriptionPopup">{data.description}</p>
                         <div className="containerPopup">
                             <p className="notePopup">Note: {data.note}</p>
-                            <p className="yearPopup">Date: {data.data}</p>
-                            <p className="genrePopup">Genres: {JSON.parse(data.genre).join(", ")}</p>
+                            <p className="yearPopup">Date: {data.date}</p>
+                            <p className="genrePopup">Genres: {data.genre}</p>
                             <p className="durationPopup">Durée: {data.duration}</p>
                         </div>
                         <div className="containerCast">
                             <div className="castPopup" id="castPopup">
-                            {JSON.parse(data.cast).map((actor, index) => (
-                                <CastMember data={actor} key={index} />
+                            {(data.cast.split(",")).map((id, index) => (
+                                <CastMember id={id} key={index} />
                             ))}
                             </div>
                         </div>
                         <div className="containerSeasons"></div>
                         <div className="containerSimilar">
                             {data.similar && (data.similar.map((movie, index) => (
-                                <img className="similarPopup" src={`${process.env.REACT_APP_DEV_URL}/${movie.cover}`} alt={movie.title} title={movie.title} key={index} />
+                                <img className="similarPopup" src={`${process.env.REACT_APP_DEV_URL}/${movie.cover}`} alt={movie.title} title={movie.title} key={index} onError={({ currentTarget }) => {currentTarget.onerror = null; currentTarget.src=`${process.env.REACT_APP_DEV_URL}/static/img/broken.webp`}} />
                             )))}
                         </div>
-                        {data.bandeAnnonceUrl && (
+                        {data.bande_annonce_url && (
                             <div className="containerTrailer">
-                                <iframe className="trailerPopup" src={data.bandeAnnonceUrl} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                <iframe className="trailerPopup" src={data.bande_annonce_url} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                             </div>
                         )}
                         <div className="popupButtons">
@@ -63,7 +66,7 @@ export function PopupMovie({ onClose, id }) {
                         </div>
                     </div>
                 </div>
-            )}
+            ) : <Loading />}
         </div>
     );
 }
@@ -77,10 +80,10 @@ export function PopupSerie({ onClose, id }) {
     return (
         <div id="popup" className="popup">
             <IoCloseOutline className="crossPopup" id="crossPopup" onClick={onClose} />
-            {data && (
+            {data ? (
                 <div className="popupContent">
                     <div className="popup-left">
-                        <img src={`${process.env.REACT_APP_DEV_URL}/${data.serie_cover_path}`} alt={data.title} className="coverPopup" />
+                        <img src={`${process.env.REACT_APP_DEV_URL}/serie_cover/${id}`} alt={data.title} className="coverPopup" onError={({ currentTarget }) => {currentTarget.onerror = null; currentTarget.src=`${process.env.REACT_APP_DEV_URL}/static/img/broken.webp`}} />
                     </div>
                     <div className={`popup-right ${data.latest_id ? "popup-serie-right" : ""}`}>
                         <p className="titlePopup">{data.name}</p>
@@ -88,19 +91,19 @@ export function PopupSerie({ onClose, id }) {
                         <div className="containerPopup">
                             <p className="notePopup">Note: {data.note}</p>
                             <p className="yearPopup">Date: {data.date}</p>
-                            <p className="genrePopup">Genres: {JSON.parse(data.genre).join(", ")}</p>
+                            <p className="genrePopup">Genres: {data.genre}</p>
                         </div>
                         <div className="containerCast">
                             <div className="castPopup" id="castPopup">
-                            {JSON.parse(data.cast).map((actor, index) => (
-                                <CastMember data={actor} key={index} />
+                            {(data.cast.split(",")).map((id, index) => (
+                                <CastMember id={id} key={index} />
                             ))}
                             </div>
                         </div>
                         <div className="containerSeasons" style={{ marginBottom: data.bande_annonce_url ? "auto" : "100px" }}>
                             {data.seasons && Object.keys(data.seasons).map((season, index) => (
                                 <Link to={"/season/"+data.seasons[season].season_id} key={index}>
-                                    <img className="seasonPopup" src={`${process.env.REACT_APP_DEV_URL}/${data.seasons[season].season_cover_path}`} alt={data.seasons[season].season_name} />
+                                    <img className="seasonPopup" src={`${process.env.REACT_APP_DEV_URL}/season_cover/${data.seasons[season].season_id}`} alt={data.seasons[season].season_name} onError={({ currentTarget }) => {currentTarget.onerror = null; currentTarget.src=`${process.env.REACT_APP_DEV_URL}/static/img/broken.webp`}} />
                                     <p className="seasonNamePopup">{data.seasons[season].season_name}</p>
                                 </Link>
                             ))}
@@ -117,13 +120,15 @@ export function PopupSerie({ onClose, id }) {
                         )}
                     </div>
                 </div>
-            )}
+            ) : <Loading />}
         </div>
     );
 }
 
 
-export function PopupLibrary({ onClose }) {
+export function PopupLibrary({ onClose, refreshAllLibraries }) {
+
+    const { getLang } = useLangage();
 
     const [libraryType, setLibraryType] = useState("movies");
     const [libraryName, setLibraryName] = useState("");
@@ -133,12 +138,13 @@ export function PopupLibrary({ onClose }) {
     const { handleSubmit } = usePost();
     
     const librariesTypes = [
-        { value: "movies", text: "movies" },
-        { value: "series", text: "series" },
-        { value: "books", text: "books" },
-        { value: "others", text: "others" },
-        { value: "tv", text: "tv" },
-        { value: "consoles", text: "consoles" },
+        { value: "movies", text: getLang("movies") },
+        { value: "series", text: getLang("series") },
+        { value: "books", text: getLang("books") },
+        { value: "others", text: getLang("other") },
+        { value: "tv", text: getLang("tv_channels") },
+        { value: "consoles", text: getLang("consoles") },
+        { value: "musics", text: getLang("musics") },
     ];
 
     const handleUserToggle = (user) => {
@@ -151,17 +157,18 @@ export function PopupLibrary({ onClose }) {
     
     const addLibrary = async () => {
         const data = {
-            libName: libraryName,
-            libPath: libraryFolder,
-            libType: libraryType,
-            libUsers: allowedUsers,
+            lib_name: libraryName,
+            lib_path: libraryFolder,
+            lib_type: libraryType,
+            lib_users: allowedUsers.join(","),
         };
         await handleSubmit({
-            url: `${process.env.REACT_APP_DEV_URL}/createLib`,
+            url: `${process.env.REACT_APP_DEV_URL}/create_library`,
             body: JSON.stringify(data),
         });
         Success({ message: `Library ${libraryName} created` });
         onClose();
+        refreshAllLibraries();
     }
     
     const { data: users } = useGet(`${process.env.REACT_APP_DEV_URL}/get_all_users`);

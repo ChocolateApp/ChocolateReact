@@ -7,5 +7,5 @@ import { IoFilmOutline, IoVideocamOutline, IoBookOutline, IoGameControllerOutlin
         "consoles": <IoGameControllerOutline className="icon" />,
         "musics": <IoHeadsetOutline className="icon" />,
         "tv": <IoTvOutline className="icon" />,
-        "others": <IoDesktopOutline className="icon" />
+        "others": <IoDesktopOutline className="icon" />,
 }

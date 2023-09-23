@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+import { IoTrashOutline } from 'react-icons/io5';
+
 import { Dropdown } from './Dropdown';
 import Buttons from './Buttons';
+
 import { usePost } from "../../Utils/Fetch";
-import { IoTrashOutline } from 'react-icons/io5';
-import { useEffect } from 'react';
+import { useLangage } from '../../Utils/useLangage';
 
 export default function AccountCard({ account, refreshAllAccounts }) {
-
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [type, setType] = useState("");
+
+    const { handleSubmit } = usePost();
+
+    const { getLang } = useLangage();
 
     const accountsTypes = [
         { value: "admin", text: "Admin" },
@@ -25,7 +31,6 @@ export default function AccountCard({ account, refreshAllAccounts }) {
         "Kid": "kid"
     };
 
-    const { handleSubmit } = usePost();
 
     useEffect(() => {
         setName(account.name);
@@ -62,11 +67,11 @@ export default function AccountCard({ account, refreshAllAccounts }) {
         <div className="account-setting" key={account.id}>
             <h3>{account.name}</h3>
             <input type="text" value={name} className="input" onChange={(e) => setName(e.target.value)} />
-            <input type="text" placeholder="New password" className="input" onChange={(e) => setPassword(e.target.value)} />
+            <input type="text" placeholder={getLang("password")} className="input" onChange={(e) => setPassword(e.target.value)} />
             <Dropdown name="type" placeholder="Type" elements={accountsTypes} setValue={setType} defaultValue={typeToName[type]} defaultText={type} />
             <div className="buttons">
                 <Buttons text="Save" type="button-small" onClick={() => saveAccount(account.id)} />
-                <Buttons icon={<IoTrashOutline />} text="Delete" type="button-delete button-small" onClick={() => deleteAccount(account.id)} />
+                <Buttons icon={<IoTrashOutline />} text={getLang("delete")} type="button-delete button-small" onClick={() => deleteAccount(account.id)} />
             </div>
         </div>
     );

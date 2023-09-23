@@ -1,10 +1,10 @@
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
-
 import { useNavigate } from 'react-router-dom';
-
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 
 import { useAudioPlayerStore } from '../../App';
+
+import { useLangage } from '../../Utils/useLangage';
 
 export function PlaylistCarousel({ playlists, lib }) {
   const containerRef = useRef(null);
@@ -16,9 +16,10 @@ export function PlaylistCarousel({ playlists, lib }) {
   const [containerWidth, setContainerWidth] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   
-  console.log(playlists);
 
   const navigate = useNavigate();
+
+  const { getLang } = useLangage();
 
   useEffect(() => {
     const itemElement = itemRef.current;
@@ -94,6 +95,7 @@ export function PlaylistCarousel({ playlists, lib }) {
       containerElement?.removeEventListener('scroll', handleScroll);
       containerElement?.removeEventListener('scrollend', handleScrollEnd);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleScrollLeft = () => {
@@ -113,8 +115,8 @@ export function PlaylistCarousel({ playlists, lib }) {
   };
   
   return (
-    <div className="main-carousel">
-      <div className="carousel-header">Playlists :</div>
+    <div className="main-carousel" data-aos="fade-up">
+      <div className="carousel-header">{getLang("playlists")}:</div>
       {slideLeft && (
         <div className="carousel-arrow" onClick={handleScrollLeft}>
             <IoChevronBack />
@@ -152,6 +154,8 @@ export function AlbumCarousel({ albums, lib }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const navigate = useNavigate();
+  
+  const { getLang } = useLangage();
 
   useEffect(() => {
     const itemElement = itemRef.current;
@@ -229,7 +233,7 @@ export function AlbumCarousel({ albums, lib }) {
       containerElement?.removeEventListener('scroll', handleScroll);
       containerElement?.removeEventListener('scrollend', handleScrollEnd);
     };
-  }, [containerRef.current, containerWidth, itemWidth, containerRef]);
+  }, [containerWidth, itemWidth, containerRef]);
 
   const handleScrollLeft = () => {
     containerRef.current.scrollBy({
@@ -252,8 +256,8 @@ export function AlbumCarousel({ albums, lib }) {
   }
 
   return (
-    <div className="main-carousel">
-      <div className="carousel-header">Albums :</div>
+    <div className="main-carousel" data-aos="fade-up">
+      <div className="carousel-header">{getLang("albums")}:</div>
       {slideLeft && (
         <div className="carousel-arrow" onClick={handleScrollLeft}>
             <IoChevronBack />
@@ -262,7 +266,7 @@ export function AlbumCarousel({ albums, lib }) {
       <div className="carousel-container" ref={containerRef}>
         {albums && albums.map((album, index) => (
           <div key={index} className={`carousel-item ${hoveredIndex && (hoveredIndex - (position*2) - 1 === index) ? 'carousel-item-hovered' : ''}`} ref={itemRef} onMouseEnter={() => setHoveredIndex(index+1)} onMouseLeave={() => setHoveredIndex(null)}>
-            <img src={`${process.env.REACT_APP_DEV_URL}/${album.cover}`} alt={album.name} className="carousel-cover" onClick={() => navigate(`/album/${lib}/${album.id}`)} />
+            <img src={`${process.env.REACT_APP_DEV_URL}/album_cover/${album.id}`} alt={album.name} className="carousel-cover" onClick={() => navigate(`/album/${lib}/${album.id}`)} />
             <div className="carousel-info" onClick={() => navigate(`/album/${lib}/${album.id}`)} >
               <div className="carousel-name">{resizeText(album.name)}</div>
               <div className="carousel-tracks">{`${album.tracks.split(',').length} titres`}</div>
@@ -289,6 +293,8 @@ export function ArtistCarousel({ artists, lib }) {
   const [containerWidth, setContainerWidth] = useState(0);
 
   const navigate = useNavigate();
+
+  const { getLang } = useLangage();
 
   useEffect(() => {
     const itemElement = itemRef.current;
@@ -362,6 +368,7 @@ export function ArtistCarousel({ artists, lib }) {
       containerElement?.removeEventListener('scroll', handleScroll);
       containerElement?.removeEventListener('scrollend', handleScrollEnd);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleScrollLeft = () => {
@@ -386,8 +393,8 @@ export function ArtistCarousel({ artists, lib }) {
 
 
   return (
-    <div className="main-carousel">
-      <div className="carousel-header">Artistes :</div>
+    <div className="main-carousel" data-aos="fade-up">
+      <div className="carousel-header">{getLang("artists")}:</div>
       {slideLeft && (
         <div className="carousel-arrow" onClick={handleScrollLeft}>
             <IoChevronBack />
@@ -396,7 +403,7 @@ export function ArtistCarousel({ artists, lib }) {
       <div className="carousel-container" ref={containerRef}>
         {artists.map((artist, index) => (
           <div key={index} className="carousel-item" ref={itemRef} onClick={() => navigate(`/artist/${lib}/${artist.id}`)}>
-            <img src={`${process.env.REACT_APP_DEV_URL}/${artist.cover}`} alt={artist.name} className="carousel-cover artist-cover" />
+            <img src={`${process.env.REACT_APP_DEV_URL}/artist_image/${artist.id}`} alt={artist.name} className="carousel-cover artist-cover" />
             <div className="carousel-info">
               <div className="carousel-name artist-name">{resizeText(artist.name)}</div>
             </div>
@@ -418,6 +425,8 @@ export function TracksCarousel({ tracks, lib }) {
   const [slideRight, setSlideRight] = useState(false);
   const [slideLeft, setSlideLeft] = useState(false);
   const [theTracks, setTracks] = useState([[]]);
+  
+  const { getLang } = useLangage();
 
   useEffect(() => {
     const listesDivisees = [];
@@ -459,7 +468,7 @@ export function TracksCarousel({ tracks, lib }) {
 
   return (
     <div className="main-carousel single-carousel">
-      <div className="carousel-header">Singles :</div>
+      <div className="carousel-header">{getLang("singles")}:</div>
       {slideLeft && (
         <div className="carousel-arrow tracks-arrow-left" onClick={handleScrollLeft}>
           <IoChevronBack />
@@ -495,7 +504,7 @@ const TrackCarouselRow = ({ track }) => {
 
   return (
     <div className="carousel-item single-item" onClick={handlePlay}>
-      <img src={`${process.env.REACT_APP_DEV_URL}/${track.cover}`} alt={track.name} className="carousel-cover single-cover" />
+      <img src={`${process.env.REACT_APP_DEV_URL}/track_cover/${track.id}`} alt={track.name} className="carousel-cover single-cover" />
       <div className="carousel-info">
         <div className="carousel-name">{resizeText(track.name)}</div>
         <div className="carousel-info">{track.album_name} • {track.artist_name}</div>

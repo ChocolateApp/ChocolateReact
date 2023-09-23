@@ -4,11 +4,17 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 
-export default function MovieCard({ name, library, url, onClick, percent, vues, duration, isAdmin }) {
+export default function MovieCard({ name, library, onClick, note, vues, duration, id, isAdmin }) {
 
     const navigate = useNavigate();
     
     const username = localStorage.getItem('username')
+
+    function toFixedIfNecessary( value, dp ){
+        return +parseFloat(value).toFixed( dp );
+    }
+
+    let percent = toFixedIfNecessary(note, 1)*10
 
     let hue;
         if (percent < 50) {
@@ -29,7 +35,6 @@ export default function MovieCard({ name, library, url, onClick, percent, vues, 
     let timeline = 0
     if (vues) {
         timeline = Math.round((vues / durationInSeconds)*100)
-        console.log(percent+"%")
     }
 
     return (
@@ -41,9 +46,9 @@ export default function MovieCard({ name, library, url, onClick, percent, vues, 
                 trailColor: 'transparent'
             })} />
             { isAdmin && (
-                <IoPencilOutline className="edit-icon" onClick={() => navigate(`/edit_movie/${name}/${library}`)} />
+                <IoPencilOutline className="edit-icon" onClick={() => navigate(`/edit_movie/${id}/${library}`)} />
             )}
-            <img src={url} alt={name} loading="lazy" onError={({ currentTarget }) => {currentTarget.onerror = null; currentTarget.src=`${process.env.REACT_APP_DEV_URL}/static/img/broken.webp`}} />
+            <img src={`${process.env.REACT_APP_DEV_URL}/movie_cover/${id}`} alt={name} loading="lazy" onError={({ currentTarget }) => {currentTarget.onerror = null; currentTarget.src=`${process.env.REACT_APP_DEV_URL}/static/img/broken.webp`}} />
             { timeline > 0 && (
                 <div className="timeLineBackground">
                     <div className="timeLine" style={{width: `${timeline}%`}}></div>

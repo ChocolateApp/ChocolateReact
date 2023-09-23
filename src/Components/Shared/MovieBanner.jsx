@@ -1,12 +1,17 @@
 import { useState } from "react";
 import Buttons from "./Buttons";
-import { IoPlayOutline, IoDownloadOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { IoPlayOutline, IoDownloadOutline, IoRefreshOutline } from "react-icons/io5";
+import { useNavigate, useParams} from "react-router-dom";
+import { usePost } from "../../Utils/Fetch";
 
-export default function MovieBanner({ name, url, description, id }) {
+export default function MovieBanner({ name, description, id, full_banner=false }) {
     const [showBigDescription, setShowBigDescription] = useState(false);
 
+    const { lib } = useParams();
+
     const navigate = useNavigate();
+
+    const { handleSubmit } = usePost()
 
     function toggleDescription() {
         setShowBigDescription(!showBigDescription);
@@ -30,15 +35,26 @@ export default function MovieBanner({ name, url, description, id }) {
         }
     }
 
+    function refresh() {
+        handleSubmit({
+            url:`${process.env.REACT_APP_DEV_URL}/rescan/${lib}`
+        })
+    }
+
     return (
-        <div className="big-banner" data-aos="fade-down">
-            <div src={url} style={{ backgroundImage: `linear-gradient(transparent, rgb(29, 29, 29)), url("${url}")` }} className="banner"></div>
+        <div className={`big-banner ${full_banner ? "full-banner" : ""}`} data-aos="fade-down">
+            <div src={`${process.env.REACT_APP_DEV_URL}/movie_banner/${id}`} style={{ backgroundImage: `linear-gradient(transparent, rgb(29, 29, 29)), url("${process.env.REACT_APP_DEV_URL}/movie_banner/${id}")` }} className="banner"></div>
             <div className="banner-data">
                 <h1>{name}</h1>
                 {getDescription(description)}
                 <div className="banner-buttons">
-                    <Buttons icon={<IoPlayOutline />} text="Watch now" onClick={() => navigate("/movie/"+id)} />
-                    <Buttons icon={<IoDownloadOutline />} text="Download" onClick={() => window.location.href = `${process.env.REACT_APP_DEV_URL}/downloadMovie/${id}`} />
+                    <div className="banner-buttons-left">
+                        <Buttons icon={<IoPlayOutline />} text="Watch now" onClick={() => navigate("/movie/"+id)} />
+                        <Buttons icon={<IoDownloadOutline />} text="Download" onClick={() => window.location.href = `${process.env.REACT_APP_DEV_URL}/downloadMovie/${id}`} />
+                    </div>
+                    <div className="banner-buttons-right">
+                        <Buttons icon={<IoRefreshOutline />} text="Refresh" onClick={refresh} />
+                    </div>
                 </div>
             </div>
         </div>

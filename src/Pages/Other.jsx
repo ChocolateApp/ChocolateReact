@@ -19,7 +19,7 @@ export default function Other() {
     console.log(canIPlayOther)
 
     if (canIPlayOther !== null && canIPlayOther !== undefined) {
-        if (canIPlayOther.canIPlay === false) {
+        if (canIPlayOther.can_I_play === false) {
             navigate('/')
         }
     }

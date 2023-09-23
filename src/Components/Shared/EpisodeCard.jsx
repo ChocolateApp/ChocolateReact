@@ -4,17 +4,13 @@ import 'react-circular-progressbar/dist/styles.css';
 import Buttons from './Buttons';
 
 
-export default function EpisodeCard({ name, description, url, id, number }) {
+export default function EpisodeCard({ name, description, id, number }) {
 
     const navigate = useNavigate();
-    
-    if (url && !url.includes("http")) {
-        url = `${process.env.REACT_APP_DEV_URL}/${url}`
-    }
 
     return (
         <div className="episode-card" >
-            <img src={url} alt={name} loading="lazy"/>
+            <img src={`${process.env.REACT_APP_DEV_URL}/episode_cover/${id}`} alt={name} loading="lazy"/>
             <div className="episode-card-left">
                 <h1>{`EP${number} - ${name}`}</h1>
                 <p>{description}</p>

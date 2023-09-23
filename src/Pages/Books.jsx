@@ -23,7 +23,7 @@ export default function Books() {
         <SearchAndCog setUrl={setUrl} setNotFound={setNotFound} />
         <div className="books">
             {Array.isArray(books) ? books.map(book => (
-                <BookCard id={book.id} title={book.title} url={`${process.env.REACT_APP_DEV_URL}/${book.cover}`} type={book.bookType} lib={lib} />
+                <BookCard id={book.id} title={book.title} url={`${process.env.REACT_APP_DEV_URL}/${book.cover}`} type={book.book_type} lib={lib} />
             )) : notFound }
         </div>
         </>

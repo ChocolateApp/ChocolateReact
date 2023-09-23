@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react'
+
 import { Dropdown } from './Dropdown';
-import { useGet, usePost } from "../../Utils/Fetch";
-import { useEffect } from "react";
 import Buttons from "./Buttons";
 
+import { useGet, usePost } from "../../Utils/Fetch";
+import { useLangage } from '../../Utils/useLangage';
 
 export default function AllLibraries() {
     const [language, setLanguage] = useState(undefined);
@@ -34,6 +35,8 @@ export default function AllLibraries() {
 
     const { handleSubmit } = usePost()
 
+    const { getLang } = useLangage();
+
     useEffect(() => {
         if (languageData) {
             setLanguage(languageData.language);
@@ -42,7 +45,6 @@ export default function AllLibraries() {
 
     useEffect(() => {
         if (settings) {
-            console.log(settings);
             const ChocolateSettings = settings.ChocolateSettings;
             const APIKeys = settings.APIKeys;
             const ARRSettings = settings.ARRSettings;
@@ -215,85 +217,85 @@ export default function AllLibraries() {
             </div>
             <div className="sub-settings">
                 <div className="api-settings">
-                    <h2>API Keys</h2>
+                    <h2>{getLang("api_keys")}</h2>
                     <div className="inline-flex">
-                        <p>TMDB API Key</p>
-                        <input className="input" placeholder="TMDB API Key" value={tmdbApiKey} onChange={e => setTmdbApiKey(e.target.value)} />
+                        <p>{getLang("tmdb_api_key")}</p>
+                        <input className="input" placeholder={getLang("tmdb_api_key")} value={tmdbApiKey} onChange={e => setTmdbApiKey(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>IGDB ID Key</p>
-                        <input className="input" placeholder="IGDB ID Key" value={igdbId} onChange={e => setIgdbId(e.target.value)} />
+                        <p>{getLang("igdb_id_key")}</p>
+                        <input className="input" placeholder={getLang("igdb_id_key")} value={igdbId} onChange={e => setIgdbId(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>IGDB Secret Key</p>
-                        <input className="input" placeholder="IGDB Secret Key" value={igdbSecret} onChange={e => setIgdbSecret(e.target.value)} />
+                        <p>{getLang("igdb_secret_key")}</p>
+                        <input className="input" placeholder={getLang("igdb_secret_key")} value={igdbSecret} onChange={e => setIgdbSecret(e.target.value)} />
                     </div>
                 </div>
             </div>
             <div className="sub-settings">
-                <h2>ARR Settings</h2>
+                <h2>{getLang("arr_settings")}</h2>
                 <div className="arr-settings">
                     <h3>Radarr</h3>
                     <div className="inline-flex">
-                        <p>Radarr Adress</p>
-                        <input className="input" placeholder="Radarr Adress" value={radarrAdress} onChange={e => setRadarrAdress(e.target.value)} />
+                        <p>{getLang("radarr_adress")}</p>
+                        <input className="input" placeholder={getLang("radarr_adress")} value={radarrAdress} onChange={e => setRadarrAdress(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>Radarr Directory</p>
-                        <input className="input" placeholder="Radarr Directory" value={radarrDirectory} onChange={e => setRadarrDirectory(e.target.value)} />
+                        <p>{getLang("radarr_folder")}</p>
+                        <input className="input" placeholder={getLang("radarr_folder")} value={radarrDirectory} onChange={e => setRadarrDirectory(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>Radarr API Key</p>
-                        <input className="input" placeholder="Radarr API Key" value={radarrApiKey} onChange={e => setRadarrApiKey(e.target.value)} />
+                        <p>{getLang("radarr_api_key")}</p>
+                        <input className="input" placeholder={getLang("radarr_api_key")} value={radarrApiKey} onChange={e => setRadarrApiKey(e.target.value)} />
                     </div>
                 </div>
                 <div className="arr-settings">
                     <h3>Sonarr</h3>
                     <div className="inline-flex">
-                        <p>Sonarr Adress</p>
-                        <input className="input" placeholder="Sonarr Adress" value={sonarrAdress} onChange={e => setSonarrAdress(e.target.value)} />
+                        <p>{getLang("sonarr_adress")}</p>
+                        <input className="input" placeholder={getLang("sonarr_adress")} value={sonarrAdress} onChange={e => setSonarrAdress(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>Sonarr Directory</p>
-                        <input className="input" placeholder="Sonarr Directory" value={sonarrDirectory} onChange={e => setSonarrDirectory(e.target.value)} />
+                        <p>{getLang("sonarr_folder")}</p>
+                        <input className="input" placeholder={getLang("sonarr_folder")} value={sonarrDirectory} onChange={e => setSonarrDirectory(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>Sonarr API Key</p>
-                        <input className="input" placeholder="Sonarr API Key" value={sonarrApiKey} onChange={e => setSonarrApiKey(e.target.value)} />
+                        <p>{getLang("sonarr_api_key")}</p>
+                        <input className="input" placeholder={getLang("sonarr_api_key")} value={sonarrApiKey} onChange={e => setSonarrApiKey(e.target.value)} />
                     </div>
                 </div>
                 <div className="arr-settings">
                     <h3>Readarr</h3>
                     <div className="inline-flex">
-                        <p>Readarr Adress</p>
-                        <input className="input" placeholder="Readarr Adress" value={readarrAdress} onChange={e => setReadarrAdress(e.target.value)} />
+                        <p>{getLang("readarr_adress")}</p>
+                        <input className="input" placeholder={getLang("readarr_adress")} value={readarrAdress} onChange={e => setReadarrAdress(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>Readarr Directory</p>
-                        <input className="input" placeholder="Readarr Directory" value={readarrDirectory} onChange={e => setReadarrDirectory(e.target.value)} />
+                        <p>{getLang("readarr_folder")}</p>
+                        <input className="input" placeholder={getLang("readarr_folder")} value={readarrDirectory} onChange={e => setReadarrDirectory(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>Readarr API Key</p>
-                        <input className="input" placeholder="Readarr API Key" value={readarrApiKey} onChange={e => setReadarrApiKey(e.target.value)} />
+                        <p>{getLang("readarr_api_key")}</p>
+                        <input className="input" placeholder={getLang("readarr_api_key")} value={readarrApiKey} onChange={e => setReadarrApiKey(e.target.value)} />
                     </div>
                 </div>
                 <div className="arr-settings">
                     <h3>Lidarr</h3>
                     <div className="inline-flex">
-                        <p>Lidarr Adress</p>
-                        <input className="input" placeholder="Lidarr Adress" value={lidarrAdress} onChange={e => setLidarrAdress(e.target.value)} />
+                        <p>{getLang("lidarr_adress")}</p>
+                        <input className="input" placeholder={getLang("lidarr_adress")} value={lidarrAdress} onChange={e => setLidarrAdress(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>Lidarr Directory</p>
-                        <input className="input" placeholder="Lidarr Directory" value={lidarrDirectory} onChange={e => setLidarrDirectory(e.target.value)} />
+                        <p>{getLang("lidarr_folder")}</p>
+                        <input className="input" placeholder={getLang("lidarr_folder")} value={lidarrDirectory} onChange={e => setLidarrDirectory(e.target.value)} />
                     </div>
                     <div className="inline-flex">
-                        <p>Lidarr API Key</p>
-                        <input className="input" placeholder="Lidarr API Key" value={lidarrApiKey} onChange={e => setLidarrApiKey(e.target.value)} />
+                        <p>{getLang("lidarr_api_key")}</p>
+                        <input className="input" placeholder={getLang("lidarr_api_key")} value={lidarrApiKey} onChange={e => setLidarrApiKey(e.target.value)} />
                     </div>
                 </div>
             </div>
-            <Buttons text={"Save Settings"} onClick={handleSave} />
+            <Buttons text={getLang("save_settings")} onClick={handleSave} />
         </div>
         </>
     );

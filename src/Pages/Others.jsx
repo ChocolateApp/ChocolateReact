@@ -20,16 +20,20 @@ export default function Others() {
         setUrl(`${process.env.REACT_APP_DEV_URL}/get_all_others/${lib}`)
     }, [lib])
 
+    useEffect(() => {
+        console.log(others)
+    }, [others])
+
     return (
         <>
             <SearchAndCog setUrl={setUrl} setNotFound={setNotFound} />
             { firstOther ? (
-                <OtherBanner name={firstOther.title} url={`${process.env.REACT_APP_DEV_URL}/${firstOther.banner}`} hash={firstOther.videoHash} />
+                <OtherBanner name={firstOther.title} url={`${process.env.REACT_APP_DEV_URL}/other_cover/${firstOther.video_hash}`} hash={firstOther.video_hash} />
             ) : notFound}
             <div className="others">
                 {Array.isArray(restOthers) ? restOthers.map(other => (
-                    <Link to={`/other/${other.videoHash}`} className="other-card">
-                        <img src={`${process.env.REACT_APP_DEV_URL}/${other.banner}`} alt={other.title} />
+                    <Link to={`/other/${other.video_hash}`} className="other-card">
+                        <img src={`${process.env.REACT_APP_DEV_URL}/other_cover/${other.video_hash}`} alt={other.title} />
                         <h3>{other.title}</h3>
                     </Link>
                 )) : null}

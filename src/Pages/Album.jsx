@@ -53,7 +53,7 @@ export default function Album() {
               <h1>{album?.name}</h1>
               <h2>{album?.artist_name}</h2>
               <h2>{album?.tracks.split(",").length} titre{album?.tracks.split(",").length > 1 ? "s" : ""}</h2>
-              <Buttons icon={<IoPlayOutline />} text="Lire" type="album-play" onClick={() => {
+              <Buttons icon={<IoPlayOutline />} text="Lire" type="album-play small" onClick={() => {
                 setSources(tracks);
                 setSourceIndex(0);
                 setVisible(true);

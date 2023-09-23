@@ -28,13 +28,9 @@ export default function Series() {
         setUrl(`${process.env.REACT_APP_DEV_URL}/get_all_series/${lib}`);
     }, [lib]);
 
-    function handleMovieCardClick(id) {
+    function handleSerieCardClick(id) {
         setShowPopup(true);
         setMovieId(id);
-    }
-
-    function toFixedIfNecessary( value, dp ){
-        return +parseFloat(value).toFixed( dp );
     }
 
     return (
@@ -42,12 +38,12 @@ export default function Series() {
             <SearchAndCog setUrl={setUrl} setNotFound={setNotFound} />
             {showPopup && <PopupSerie onClose={() => setShowPopup(false)} id={serieId} />}
             { firstSerie ? (
-                <SerieBanner name={firstSerie.name} url={`${process.env.REACT_APP_DEV_URL}/${firstSerie.banniere}`} description={firstSerie.description} showPopup={() => handleMovieCardClick(firstSerie.id)} />
+                <SerieBanner name={firstSerie.name} id={firstSerie.id} description={firstSerie.description} showPopup={() => handleSerieCardClick(firstSerie.id)} full_banner={restSeries.length === 0} />
             ) : notFound}
             {restSeries.length > 0 || firstSerie ? (
                 <div className='series'>
                     {Array.isArray(restSeries) ? restSeries.map(serie => (
-                        <SerieCard key={serie.id} name={serie.name} url={`${process.env.REACT_APP_DEV_URL}/${serie.serie_cover_path}`} onClick={() => handleMovieCardClick(serie.id)} library={lib} percent={toFixedIfNecessary(serie.note, 1)*10} />
+                        <SerieCard key={serie.id} name={serie.name} id={serie.id} onClick={() => handleSerieCardClick(serie.id)} library={lib} percent={serie.note} />
                         )) : null}
                         </div>
                 ) : null}

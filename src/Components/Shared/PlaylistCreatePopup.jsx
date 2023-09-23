@@ -25,7 +25,7 @@ export default function PlaylistCreatePopup({ setShowCreatePopup, trackId }) {
             </div>
 
             <div className="playlist-create-buttons">
-                <Buttons text="Create" type="playlist-create" onClick={createPlaylist} />
+                <Buttons text="Create" type="playlist-create small" onClick={createPlaylist} />
             </div>    
         </div>
     );

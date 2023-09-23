@@ -43,6 +43,7 @@ const AudioPlayer = () => {
         handleSubmit({
             url: url
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sources, sourceIndex]);
     
     function shuffleList(list) {

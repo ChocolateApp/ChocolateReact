@@ -56,7 +56,6 @@ export function usePost() {
   
       setPending(true);
       setError(null);
-  
       try {
         const requestOptions = {
           method: "POST",

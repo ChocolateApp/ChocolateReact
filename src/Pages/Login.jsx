@@ -1,7 +1,10 @@
 import { useGet } from "../Utils/Fetch"
-import LoginPopup from "../Components/Shared/LoginPopup"
 import { useState } from "react"
 import { usePost } from "../Utils/Fetch"
+
+import LoginPopup from "../Components/Shared/LoginPopup"
+
+import CreateAccount from "./CreateAccount"
 
 export default function Login() {
 
@@ -38,12 +41,20 @@ export default function Login() {
         <>
             {showPopup ? <LoginPopup username={username} onDone={() => window.location.reload()} onClose={() => setShowPopup(false)} /> : null}
             <div className="accounts">
-                {Array.isArray(users) ? users.map(user => (
-                    <div className="account" onClick={() => login(user.name, user.password_empty, user.account_type)}>
-                        <img src={`${process.env.REACT_APP_DEV_URL}/${user.profil_picture}`} alt="avatar" />
-                        <p>{user.name}</p>
-                    </div>
-                )) : null}
+                {Array.isArray(users) ? (
+                    users.length > 0 ? (
+                        users.map(user => (
+                            <div className="account" onClick={() => login(user.name, user.password_empty, user.account_type)}>
+                                <img src={`${process.env.REACT_APP_DEV_URL}/user_image/${user.id}`} alt="avatar" />
+                                <p>{user.name}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <>
+                        <CreateAccount admin_only={true} shared={false} />
+                        </>
+                    )
+                ) : null}
             </div>
         </>
     )

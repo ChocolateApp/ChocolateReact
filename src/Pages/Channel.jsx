@@ -34,7 +34,7 @@ export default function Channel() {
         preload: "none",
         techOrder: [ 'chromecast', 'html5' ],
         sources: [{
-            src: channelData && channelData.channelURL ? channelData.channelURL : "",
+            src: channelData && channelData.channel_url ? channelData.channel_url : "",
             type: "application/x-mpegURL"
         }],
         html5: {
@@ -64,14 +64,14 @@ export default function Channel() {
         <>
             <JustCog />
             <Back path={`/tv/${lib}`} />
-            <h1 className="videoTitle">{channelData?.channelName}</h1>
+            <h1 className="videoTitle">{channelData?.channel_name}</h1>
             <Video options={options} onReady={handlePlayerReady} />
             <div className="episodeButtons">
-                { channelData?.previousId !== null && (
-                    <Buttons text="previous" onClick={() => navigate(`/channel/${lib}/${channelData.previousId}`)} />
+                { channelData?.previous_id !== null && (
+                    <Buttons text="previous" onClick={() => navigate(`/channel/${lib}/${channelData.previous_id}`)} />
                 )}
-                { channelData?.nextId !== null && (
-                    <Buttons text="next" onClick={() => navigate(`/channel/${lib}/${channelData.nextId}`)} />
+                { channelData?.next_id !== null && (
+                    <Buttons text="next" onClick={() => navigate(`/channel/${lib}/${channelData.next_id}`)} />
                 )}
             </div>
         </>

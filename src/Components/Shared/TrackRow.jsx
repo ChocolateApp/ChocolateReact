@@ -15,7 +15,7 @@ export default function TrackRow({ track, index, tracks, album={} }) {
 
     const rowRef = useRef(null);
 
-    const { setSources, setVisible, setIsPlaying, setSourceIndex, sources } = useAudioPlayerStore();
+    const { setSources, setVisible, setIsPlaying, setSourceIndex } = useAudioPlayerStore();
   
     function getDuration(duration) {
         let minutes = Math.floor(duration / 60);
@@ -39,9 +39,10 @@ export default function TrackRow({ track, index, tracks, album={} }) {
     useEffect(() => {
         if (sendLike !== null) {
             handleSubmit({
-                url: `${process.env.REACT_APP_DEV_URL}/likeTrack/${track.id}/${localStorage.getItem('id')}`
+                url: `${process.env.REACT_APP_DEV_URL}/like_track/${track.id}/${localStorage.getItem('id')}`
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sendLike]);
 
     function handleMouseEnter() {

@@ -29,7 +29,7 @@ export default function Header() {
                     <IoHomeOutline className="icon" />
                 </Link>
                 {Array.isArray(allLibraries) ? allLibraries.map((library) => (
-                    <Link to={`/${library.lib_type}/${library.lib_name}`} key={`${library.lib_type}_${library.lib_name}`} className="header_icon">
+                    <Link to={`/${library.lib_type}/${library.lib_name}`} key={`${library.lib_type}_${library.lib_name}`} className="header_icon" title={library.lib_name}>
                         {librariesIcons[library.lib_type]}
                     </Link>
                 )) : null}

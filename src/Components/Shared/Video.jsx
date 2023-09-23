@@ -1,6 +1,10 @@
 import { useRef, useEffect } from 'react';
-import videojs from "video.js";
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import videojs from "!video.js";
 import "video.js/dist/video-js.css";
+// eslint-disable-next-line import/no-webpack-loader-syntax
+require('!style-loader!css-loader!video.js/dist/video-js.css')
+
 
 
 export const Video = (props, videoUrl="", title="", description="", poster="") => {

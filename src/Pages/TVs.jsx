@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useGet } from "../Utils/Fetch";
 
@@ -12,6 +12,10 @@ export default function TVs() {
 
     const [notFound, setNotFound] = useState(<Loading />)
     const [url, setUrl] = useState(`${process.env.REACT_APP_DEV_URL}/get_channels/${lib}`)
+
+    useEffect(() => {
+        setUrl(`${process.env.REACT_APP_DEV_URL}/get_channels/${lib}`)
+    }, [lib])
 
     const { data: channels} = useGet(url)
 

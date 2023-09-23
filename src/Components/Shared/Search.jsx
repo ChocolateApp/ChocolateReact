@@ -2,19 +2,17 @@ import { useRef, useState } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
 import { useParams, useLocation } from 'react-router-dom';
 
+import { useLangage } from '../../Utils/useLangage';
+
 export default function Search({ setUrl, setNotFound, keys=[] }) {
-
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
     const [searchClass, setSearchClass] = useState('text_input')
 
-    const { lib } = useParams()
-
-    const libType = capitalizeFirstLetter(useLocation().pathname.split('/')[1])
-
     const input = useRef(null)
+
+    const { lib } = useParams()
+    const libType = useLocation().pathname.split('/')[1]
+
+    const { getLang } = useLangage()
 
     function search(e) {
         e.preventDefault()
@@ -24,18 +22,18 @@ export default function Search({ setUrl, setNotFound, keys=[] }) {
         if (keys.length > 0) {
             const data = {}
             for (let key of keys) {
-                data[key] = `${process.env.REACT_APP_DEV_URL}/search${capitalizeFirstLetter(key)}/${lib}/${input.current.value}`
+                data[key] = `${process.env.REACT_APP_DEV_URL}/search_${key}/${lib}/${input.current.value}`
             }
             setUrl(data)
         } else {
-            setUrl(`${process.env.REACT_APP_DEV_URL}/search${libType}/${lib}/${input.current.value}`)
+            setUrl(`${process.env.REACT_APP_DEV_URL}/search_${libType}/${lib}/${input.current.value}`)
         }
     }
 
     return (
         <form id="search_form" onSubmit={search}>
             <input
-                placeholder="Search"
+                placeholder={getLang("search_text")}
                 type="input"
                 id="search"
                 className={searchClass}

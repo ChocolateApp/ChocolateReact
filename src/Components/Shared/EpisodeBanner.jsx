@@ -3,14 +3,10 @@ import Buttons from "./Buttons";
 import { IoPlayOutline, IoDownloadOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-export default function EpisodeBanner({ name, url, description, id, number }) {
+export default function EpisodeBanner({ name, description, id, number }) {
     const [showBigDescription, setShowBigDescription] = useState(false);
 
     const navigate = useNavigate()
-
-    if (url && !url.includes("http")) {
-        url = `${process.env.REACT_APP_DEV_URL}/${url}`
-    }
     
     function toggleDescription() {
         setShowBigDescription(!showBigDescription);
@@ -36,7 +32,7 @@ export default function EpisodeBanner({ name, url, description, id, number }) {
 
     return (
         <div className="big-banner">
-            <div style={{ backgroundImage: `linear-gradient(transparent, rgb(29, 29, 29)), url("${url}")` }} className="banner"></div>
+            <div style={{ backgroundImage: `linear-gradient(transparent, rgb(29, 29, 29)), url("${process.env.REACT_APP_DEV_URL}/episode_cover/${id}"` }} className="banner"></div>
             <div className="banner-data">
                 <h1>{`EP${number} - ${name}`}</h1>
                 {getDescription(description)}
