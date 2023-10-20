@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import { useGet } from '../Utils/Fetch';
 
@@ -20,7 +20,7 @@ export default function Album() {
 
     const { setSources, setVisible, setIsPlaying, setSourceIndex } = useAudioPlayerStore();
 
-    const { id } = useParams();
+    const { lib, id } = useParams();
   
     const [urls, setUrls] = useState({
       tracks: `${process.env.REACT_APP_DEV_URL}/get_album_tracks/${id}`,
@@ -31,7 +31,9 @@ export default function Album() {
   
     const { data: tracks } = useGet(urls["tracks"]);
     const { data: album } = useGet(urls["album"]);
-  
+
+    console.log(album);
+
     useEffect(() => {
       setUrls({
         tracks: `${process.env.REACT_APP_DEV_URL}/get_album_tracks/${id}`,
@@ -47,11 +49,14 @@ export default function Album() {
         <div className="album-div">
           <div className="album-data">
             <div className="album-cover">
-              <img src={`${process.env.REACT_APP_DEV_URL}/${album?.cover}`} alt="album cover" />
+              <img src={`${process.env.REACT_APP_DEV_URL}/album_cover/${album?.id}`} alt="album cover" />
             </div>
             <div className="album-infos">
               <h1>{album?.name}</h1>
-              <h2>{album?.artist_name}</h2>
+              <h2><Link
+                to={`/artist/${lib}/${album?.artist_id}`}
+                className="link"
+              >{album?.artist_name}</Link></h2>
               <h2>{album?.tracks.split(",").length} titre{album?.tracks.split(",").length > 1 ? "s" : ""}</h2>
               <Buttons icon={<IoPlayOutline />} text="Lire" type="album-play small" onClick={() => {
                 setSources(tracks);

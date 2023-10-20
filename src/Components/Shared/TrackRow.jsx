@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 
-import { IoPlayOutline, IoThumbsUpOutline, IoThumbsUp } from "react-icons/io5";
+import { IoPlayOutline, IoThumbsUpOutline, IoThumbsUp, IoTrashBinOutline } from "react-icons/io5";
 import { MdPlaylistAdd } from "react-icons/md";
 
 import { useAudioPlayerStore } from "../../App";
 import { usePost } from "../../Utils/Fetch";
 import PlaylistPopup from './PlaylistPopup';
 
-export default function TrackRow({ track, index, tracks, album={} }) {
+export default function TrackRow({ track, index, tracks, album={}, playlist=undefined }) {
     const [isHovered, setIsHovered] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [sendLike, setSendLike] = useState(null);
@@ -75,7 +75,13 @@ export default function TrackRow({ track, index, tracks, album={} }) {
         setShowPopup(false);
     }
     
-
+    function handleRemove(event) {
+        event.stopPropagation();
+        handleSubmit({
+            url: `${process.env.REACT_APP_DEV_URL}/remove_track_from_playlist`,
+            body: { playlist_id: playlist, track_id: track.id }
+        });
+    }
 
     return (
         <>
@@ -87,6 +93,10 @@ export default function TrackRow({ track, index, tracks, album={} }) {
                     <div>
                         {isLiked ? <IoThumbsUp className='track-row-like' onClick={handleLike} /> : <IoThumbsUpOutline className='track-row-like' onClick={handleLike} />}
                         <MdPlaylistAdd className='track-row-playlist' onClick={handlePlaylist} />
+                        {
+                            //if in playlist page
+                            playlist ? <IoTrashBinOutline className='track-row-delete' onClick={handleRemove} /> : null
+                        }
                     </div>
                 </div>
             )}

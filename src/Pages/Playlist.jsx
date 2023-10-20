@@ -76,7 +76,7 @@ export default function Playlist() {
           </div>
           <div className='playlist-tracks'>
             {tracks ? tracks.map((track, index) => (
-                <TrackRow track={track} index={index+1} tracks={tracks} showPlaylistPopup={showPlaylistPopup} />
+                <TrackRow track={track} index={index+1} tracks={tracks} showPlaylistPopup={showPlaylistPopup} playlist={id} />
             )) : notFound}
           </div>
         </div>

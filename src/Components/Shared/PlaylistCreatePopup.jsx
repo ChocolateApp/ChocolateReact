@@ -9,24 +9,26 @@ export default function PlaylistCreatePopup({ setShowCreatePopup, trackId }) {
 
     const createPlaylist = () => {
         handleSubmit({
-            url: `${process.env.REACT_APP_DEV_URL}/createPlaylist`,
+            url: `${process.env.REACT_APP_DEV_URL}/create_playlist`,
             body: { name: document.getElementById("playlist-name").value, user_id: localStorage.getItem("id"), track_id: trackId, library: lib }
         })
         setShowCreatePopup(false);
     }
 
     return (
-        <div className="playlist-create-popup">
-            <h1>Create a playlist</h1>
+        <div className="playlist-create-popup-parent">
+            <div className="playlist-create-popup">
+                <h1>Create a playlist</h1>
 
-            <div className="playlist-create-input">
-                <label htmlFor="playlist-name">Playlist name</label>
-                <input type="text" name="playlist-name" id="playlist-name" className="input" />
+                <div className="playlist-create-input">
+                    <label htmlFor="playlist-name">Playlist name</label>
+                    <input type="text" name="playlist-name" id="playlist-name" className="input" />
+                </div>
+
+                <div className="playlist-create-buttons">
+                    <Buttons text="Create" type="playlist-create small" onClick={createPlaylist} />
+                </div>    
             </div>
-
-            <div className="playlist-create-buttons">
-                <Buttons text="Create" type="playlist-create small" onClick={createPlaylist} />
-            </div>    
         </div>
     );
 }

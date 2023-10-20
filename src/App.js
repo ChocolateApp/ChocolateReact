@@ -41,6 +41,8 @@ import Header from './Components/Shared/Header';
 
 import Actor from './Pages/Actor';
 
+import AddMedia from './Pages/AddMedia';
+
 import Login from './Pages/Login';
 import Logout from './Pages/Logout';
 import Settings from './Pages/Settings';
@@ -144,6 +146,7 @@ const App = () => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="/add_media" element={<AddMedia />} />
           <Route path="/login" element={<Login />} no_login={true} />
           <Route path="/invite/:key" element={<CreateAccount />} no_login={true} />
         </Routes>

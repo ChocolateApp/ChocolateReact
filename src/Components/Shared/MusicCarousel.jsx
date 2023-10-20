@@ -125,7 +125,7 @@ export function PlaylistCarousel({ playlists, lib }) {
       <div className="carousel-container" ref={containerRef}>
         {playlists.map((playlist, index) => (
           <div key={index} className={`carousel-item ${hoveredIndex && (hoveredIndex - (position*2) - 1 === index) ? 'carousel-item-hovered' : ''}`} ref={itemRef} onClick={() => navigate(`/playlist/${lib}/${playlist.id}`)} onMouseEnter={() => setHoveredIndex(index+1)} onMouseLeave={() => setHoveredIndex(null)}>
-            <img src={`${process.env.REACT_APP_DEV_URL}/${playlist.cover}`} alt={playlist.name} className="carousel-cover" />
+            <img src={`${process.env.REACT_APP_DEV_URL}/playlist_cover/${playlist.id}`} alt={playlist.name} className="carousel-cover" />
             <div className="carousel-info">
               <div className="carousel-name">{playlist.name}</div>
               <div className="carousel-tracks">{`${playlist.tracks.split(',').length} titre${playlist.tracks.split(',').length > 1 ? 's' : ''}`}</div>

@@ -10,23 +10,25 @@ export default function SerieCard({ name, library, onClick, note, id }) {
     
 
     function toFixedIfNecessary( value, dp ){
-        return +parseFloat(value).toFixed( dp );
+        console.log(value);
+        console.log(+parseFloat(value).toFixed(dp));
+        return +parseFloat(value).toFixed(dp);
     }
 
-    let percent = toFixedIfNecessary(note * 10, 1);
+    let percent = toFixedIfNecessary(note, 1);
 
     let hue;
-        if (percent < 50) {
-            hue = percent * 1.2; // Teinte allant de 0 à 60
+        if (percent*10 < 50) {
+            hue = percent*10 * 1.2; // Teinte allant de 0 à 60
         } else {
-            hue = (percent - 50) * 1.2 + 60; // Teinte allant de 60 à 120
+            hue = (percent*10 - 50) * 1.2 + 60; // Teinte allant de 60 à 120
     }
 
     let noteColor = `hsl(${hue}deg, 100%, 50%)`
 
     return (
         <div className="serie-card" onClick={onClick} data-aos="fade-up">
-            <CircularProgressbar value={percent} text={`${percent/10}/10`}
+            <CircularProgressbar value={percent*10} text={`${percent}/10`}
                 styles={buildStyles({
                 pathColor: noteColor,
                 textColor: '#fff',

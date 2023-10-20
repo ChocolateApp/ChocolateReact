@@ -41,8 +41,8 @@ export default function Movies() {
             ) : notFound}
             {restFilms.length > 0 || firstFilm ? (
                     <div className='movies'>
-                        {Array.isArray(restFilms) ? restFilms.map((film) => (
-                            <MovieCard isAdmin={isAdmin} key={film.id} name={film.real_title} onClick={() => handleMovieCardClick(film.id)} id={film.id} library={lib} note={film.note} vues={{}} duration={film.duration} />
+                        {Array.isArray(restFilms) ? restFilms.map((film, index) => (
+                            <MovieCard isAdmin={isAdmin} key={index} name={film.real_title} onClick={() => handleMovieCardClick(film.id)} id={film.id} library={lib} note={film.note} vues={{}} duration={film.duration} />
                         )) : null }
                     </div>
             ) : null}

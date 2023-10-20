@@ -35,7 +35,6 @@ export default function Actor() {
     }
 
     const { data: actor } = useGet(url);
-    console.log(actor)
     return (
       <>
         <Back />        

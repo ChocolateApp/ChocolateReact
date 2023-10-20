@@ -42,7 +42,7 @@ export default function PlaylistPopup({ trackId, hidePlaylistPopup }) {
                         {playlists?.filter(playlist => playlist.id !== 0).map((playlist, index) => {
                             return (
                                 <div className="playlist-popup-playlist" key={index} onClick={() => addTrackToPlaylist(playlist.id)}>
-                                    <img src={`${process.env.REACT_APP_DEV_URL}/${playlist.cover}`} alt="playlist cover" />
+                                    <img src={`${process.env.REACT_APP_DEV_URL}/playlist_cover/${playlist.id}`} alt="playlist cover" />
                                     <div className="playlist-popup-playlist-infos">
                                         <h2>{playlist.name}</h2>
                                         <p>{playlist.tracks.split(",").length} titre{playlist.tracks.split(",").length > 1 ? "s" : ""}</p>

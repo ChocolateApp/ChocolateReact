@@ -43,7 +43,7 @@ export default function Series() {
             {restSeries.length > 0 || firstSerie ? (
                 <div className='series'>
                     {Array.isArray(restSeries) ? restSeries.map(serie => (
-                        <SerieCard key={serie.id} name={serie.name} id={serie.id} onClick={() => handleSerieCardClick(serie.id)} library={lib} percent={serie.note} />
+                        <SerieCard key={serie.id} name={serie.name} id={serie.id} onClick={() => handleSerieCardClick(serie.id)} library={lib} note={serie.note} />
                         )) : null}
                         </div>
                 ) : null}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Buttons from "../Components/Shared/Buttons";
 import { usePost, useGet } from "../Utils/Fetch";
 import { useLangage } from "../Utils/useLangage";
+import { Success } from '../Components/Shared/Notifications';
 
 export default function Profil() {
     const [name, setName] = useState("");
@@ -46,6 +47,7 @@ export default function Profil() {
                 image: image,
             },
         });
+        Success("Profil updated !");
     };
 
     return (
