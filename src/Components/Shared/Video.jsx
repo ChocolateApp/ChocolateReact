@@ -22,6 +22,9 @@ export const Video = (props) => {
 
       // Intercepter les requêtes de chargement de chunk
       videojs.Vhs.xhr.beforeRequest = function (options) {
+        if (window.location.href.includes("channel")) {
+          return options;
+        }
         options.headers = {
           ...options.headers,
           'x-user-token': userId,
