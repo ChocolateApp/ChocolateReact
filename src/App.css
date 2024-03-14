@@ -676,7 +676,7 @@ a#settings {
   background: transparent;
 }
 
-video-js {
+div.video-js {
   width: 97vw !important;
   height: 100dvh !important;
   margin-top: 0vh;
@@ -1064,7 +1064,7 @@ video-js {
 }
 
 .carousel-header {
-  color: #FFF;
+  color: #fff;
   font-family: Poppins;
   font-size: 22px;
   font-style: normal;
@@ -1135,7 +1135,7 @@ video-js {
 }
 
 .carousel-name {
-  color: #FFF;
+  color: #fff;
   font-family: Poppins;
   font-size: 14px;
   font-style: normal;
@@ -1186,7 +1186,7 @@ video-js {
   column-gap: 2rem;
 }
 
-.album-infos ,
+.album-infos,
 .artist-infos,
 .playlist-infos {
   display: flex;
@@ -1198,7 +1198,7 @@ video-js {
 .artist-infos h1,
 .playlist-infos h1 {
   font-weight: 500;
-  color: #FFF;
+  color: #fff;
 }
 
 .album-infos h2,
@@ -1215,7 +1215,7 @@ video-js {
   width: 16rem;
   height: 16rem;
   border-radius: 15px;
-  object-fit: cover;  
+  object-fit: cover;
 }
 
 .album-tracks,
@@ -1254,7 +1254,7 @@ video-js {
 }
 
 .track-name {
-  color: #FFF !important;
+  color: #fff !important;
   font-weight: 500 !important;
 }
 
@@ -1348,8 +1348,8 @@ video-js {
 
 /* === range theme and appearance === */
 input[type="range"].audio-slider {
-	font-size: 1.5rem;
-	width: 12.5em;
+  font-size: 1.5rem;
+  width: 12.5em;
 }
 
 .audio-player-icon-right {
@@ -1359,7 +1359,7 @@ input[type="range"].audio-slider {
   column-gap: 1rem;
 }
 
-.audio-player-volumebar  {
+.audio-player-volumebar {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1389,7 +1389,6 @@ input[type="range"].audio-slider {
   stroke: #454545;
 }
 
-
 .audio-player-repeat-icon-container span {
   position: absolute;
   margin-left: 22px;
@@ -1406,154 +1405,154 @@ input[type="range"].audio-slider {
 }
 
 input[type="range"].audio-slider {
-	color: #fff;
-	--thumb-height: .75em;
-	--track-height: 0.125em;
-	--track-color: #8e8e8e33;
-	--brightness-hover: 180%;
-	--brightness-down: 80%;
-	--clip-edges: 0.125em;
+  color: #fff;
+  --thumb-height: 0.75em;
+  --track-height: 0.125em;
+  --track-color: #8e8e8e33;
+  --brightness-hover: 180%;
+  --brightness-down: 80%;
+  --clip-edges: 0.125em;
 }
 
 /* === range commons === */
 input[type="range"].audio-slider {
-	position: relative;
-	background: #fff0;
-	overflow: hidden;
+  position: relative;
+  background: #fff0;
+  overflow: hidden;
 }
 
 input[type="range"].audio-slider:active {
-	cursor: grabbing;
+  cursor: grabbing;
 }
 
 input[type="range"].audio-slider:disabled {
-	filter: grayscale(1);
-	opacity: 0.3;
-	cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 /* === WebKit specific styles === */
 input[type="range"].audio-slider,
 input[type="range"].audio-slider::-webkit-slider-runnable-track,
 input[type="range"].audio-slider::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	transition: all ease 100ms;
-	height: var(--thumb-height);
+  -webkit-appearance: none;
+  transition: all ease 100ms;
+  height: var(--thumb-height);
 }
 
 input[type="range"].audio-slider::-webkit-slider-runnable-track,
 input[type="range"].audio-slider::-webkit-slider-thumb {
-	position: relative;
+  position: relative;
 }
 
 input[type="range"].audio-slider::-webkit-slider-thumb {
-	--thumb-radius: calc((var(--thumb-height) * 0.5) - 1px);
-	--clip-top: calc((var(--thumb-height) - var(--track-height)) * 0.5 - 0.5px);
-	--clip-bottom: calc(var(--thumb-height) - var(--clip-top));
-	--clip-further: calc(100% + 1px);
-	--box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0
-		100vmax currentColor;
+  --thumb-radius: calc((var(--thumb-height) * 0.5) - 1px);
+  --clip-top: calc((var(--thumb-height) - var(--track-height)) * 0.5 - 0.5px);
+  --clip-bottom: calc(var(--thumb-height) - var(--clip-top));
+  --clip-further: calc(100% + 1px);
+  --box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0
+    100vmax currentColor;
 
-	width: var(--thumb-width, var(--thumb-height));
-	background: linear-gradient(currentColor 0 0) scroll no-repeat left center /
-		50% calc(var(--track-height) + 1px);
-	background-color: currentColor;
-	box-shadow: var(--box-fill);
-	border-radius: var(--thumb-width, var(--thumb-height));
+  width: var(--thumb-width, var(--thumb-height));
+  background: linear-gradient(currentColor 0 0) scroll no-repeat left center /
+    50% calc(var(--track-height) + 1px);
+  background-color: currentColor;
+  box-shadow: var(--box-fill);
+  border-radius: var(--thumb-width, var(--thumb-height));
 
-	filter: brightness(100%);
-	clip-path: polygon(
-		100% -1px,
-		var(--clip-edges) -1px,
-		0 var(--clip-top),
-		-100vmax var(--clip-top),
-		-100vmax var(--clip-bottom),
-		0 var(--clip-bottom),
-		var(--clip-edges) 100%,
-		var(--clip-further) var(--clip-further)
-	);
+  filter: brightness(100%);
+  clip-path: polygon(
+    100% -1px,
+    var(--clip-edges) -1px,
+    0 var(--clip-top),
+    -100vmax var(--clip-top),
+    -100vmax var(--clip-bottom),
+    0 var(--clip-bottom),
+    var(--clip-edges) 100%,
+    var(--clip-further) var(--clip-further)
+  );
 }
 
 input[type="range"].audio-slider:hover::-webkit-slider-thumb {
-	filter: brightness(var(--brightness-hover));
-	cursor: grab;
+  filter: brightness(var(--brightness-hover));
+  cursor: grab;
 }
 
 input[type="range"].audio-slider:active::-webkit-slider-thumb {
-	filter: brightness(var(--brightness-down));
-	cursor: grabbing;
+  filter: brightness(var(--brightness-down));
+  cursor: grabbing;
 }
 
 input[type="range"].audio-slider::-webkit-slider-runnable-track {
-	background: linear-gradient(var(--track-color) 0 0) scroll no-repeat center /
-		100% calc(var(--track-height) + 1px);
+  background: linear-gradient(var(--track-color) 0 0) scroll no-repeat center /
+    100% calc(var(--track-height) + 1px);
 }
 
 input[type="range"].audio-slider:disabled::-webkit-slider-thumb {
-	cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 /* === Firefox specific styles === */
 input[type="range"].audio-slider,
 input[type="range"].audio-slider::-moz-range-track,
 input[type="range"].audio-slider::-moz-range-thumb {
-	appearance: none;
-	transition: all ease 100ms;
-	height: var(--thumb-height);
+  appearance: none;
+  transition: all ease 100ms;
+  height: var(--thumb-height);
 }
 
 input[type="range"].audio-slider::-moz-range-track,
 input[type="range"].audio-slider::-moz-range-thumb,
 input[type="range"].audio-slider::-moz-range-progress {
-	background: #fff0;
+  background: #fff0;
 }
 
 input[type="range"].audio-slider::-moz-range-thumb {
-	background: currentColor;
-	border: 0;
-	width: var(--thumb-width, var(--thumb-height));
-	border-radius: var(--thumb-width, var(--thumb-height));
-	cursor: grab;
+  background: currentColor;
+  border: 0;
+  width: var(--thumb-width, var(--thumb-height));
+  border-radius: var(--thumb-width, var(--thumb-height));
+  cursor: grab;
 }
 
 input[type="range"].audio-slider:active::-moz-range-thumb {
-	cursor: grabbing;
+  cursor: grabbing;
 }
 
 input[type="range"].audio-slider::-moz-range-track {
-	width: 100%;
-	background: var(--track-color);
+  width: 100%;
+  background: var(--track-color);
 }
 
 input[type="range"].audio-slider::-moz-range-progress {
-	appearance: none;
-	background: currentColor;
-	transition-delay: 30ms;
+  appearance: none;
+  background: currentColor;
+  transition-delay: 30ms;
 }
 
 input[type="range"].audio-slider::-moz-range-track,
 input[type="range"].audio-slider::-moz-range-progress {
-	height: calc(var(--track-height) + 1px);
-	border-radius: var(--track-height);
+  height: calc(var(--track-height) + 1px);
+  border-radius: var(--track-height);
 }
 
 input[type="range"].audio-slider::-moz-range-thumb,
 input[type="range"].audio-slider::-moz-range-progress {
-	filter: brightness(100%);
+  filter: brightness(100%);
 }
 
 input[type="range"].audio-slider:hover::-moz-range-thumb,
 input[type="range"].audio-slider:hover::-moz-range-progress {
-	filter: brightness(var(--brightness-hover));
+  filter: brightness(var(--brightness-hover));
 }
 
 input[type="range"].audio-slider:active::-moz-range-thumb,
 input[type="range"].audio-slider:active::-moz-range-progress {
-	filter: brightness(var(--brightness-down));
+  filter: brightness(var(--brightness-down));
 }
 
 input[type="range"].audio-slider:disabled::-moz-range-thumb {
-	cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .playlist-popup {
@@ -1632,7 +1631,6 @@ input[type="range"].audio-slider:disabled::-moz-range-thumb {
   justify-content: flex-end;
   padding-inline-end: 2rem;
 }
-
 
 .button.playlist-create {
   position: absolute;
@@ -1949,7 +1947,7 @@ input[type="range"].audio-slider:disabled::-moz-range-thumb {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2; /* number of lines to show */
-    line-clamp: 2; 
+    line-clamp: 2;
     -webkit-box-orient: vertical;
   }
 
@@ -1982,7 +1980,7 @@ input[type="range"].audio-slider:disabled::-moz-range-thumb {
   .episode-card-left {
     row-gap: 1vh;
   }
-  
+
   .episode-card-left h1 {
     font-size: 1rem;
   }
@@ -2029,7 +2027,10 @@ input[type="range"].audio-slider:disabled::-moz-range-thumb {
     height: 20vh;
   }
 
-  .musics-carousels, .album-div, .artist-div, .playlist-div {
+  .musics-carousels,
+  .album-div,
+  .artist-div,
+  .playlist-div {
     padding: 0px 2vw;
     margin-left: 12vw;
   }
@@ -2085,7 +2086,7 @@ input[type="range"].audio-slider:disabled::-moz-range-thumb {
     font-size: 1.25rem;
     width: 4em;
   }
-  
+
   .audio-seekbar h3 {
     width: auto;
     font-size: 15px;
@@ -2094,7 +2095,7 @@ input[type="range"].audio-slider:disabled::-moz-range-thumb {
   .audio-player-seek h2 {
     font-size: 10px;
   }
-  
+
   .audio-player-icon-right,
   .audio-player-button {
     font-size: 1.25rem;
@@ -2117,21 +2118,25 @@ input[type="range"].audio-slider:disabled::-moz-range-thumb {
     display: none;
   }
 
-  .album-cover img, .artist-cover img, .playlist-cover img {
+  .album-cover img,
+  .artist-cover img,
+  .playlist-cover img {
     width: 8rem;
     height: 8rem;
   }
 
-  .album-track h3, .artist-track h3, .playlist-track h3 {
+  .album-track h3,
+  .artist-track h3,
+  .playlist-track h3 {
     font-weight: 400;
     color: #fff;
     font-size: 0.75rem;
   }
 
   .track-name {
-      color: #fff !important;
-      font-weight: 500 !important;
-      font-size: 0.75rem !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+    font-size: 0.75rem !important;
   }
 
   .track-duration {
@@ -2154,7 +2159,7 @@ input[type="range"].audio-slider:disabled::-moz-range-thumb {
     cursor: pointer;
     font-size: 2rem;
   }
-  
+
   .header_icon {
     font-size: 28px;
   }

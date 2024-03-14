@@ -33,7 +33,7 @@ export default function Movie() {
         autoplay: true,
         controls: true,
         preload: "none",
-        techOrder: [ 'chromecast', 'html5' ],
+        techOrder: [ 'chromecast', 'html5', 'hls' ],
         sources: [{
             src: `${process.env.REACT_APP_DEV_URL}/main_serie/${id}`,
             type: "application/x-mpegURL"

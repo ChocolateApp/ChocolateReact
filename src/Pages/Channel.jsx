@@ -32,7 +32,7 @@ export default function Channel() {
         autoplay: true,
         controls: true,
         preload: "none",
-        techOrder: [ 'chromecast', 'html5' ],
+        techOrder: [ 'chromecast', 'html5', 'hls' ],
         sources: [{
             src: channelData && channelData.channel_url ? channelData.channel_url : "",
             type: "application/x-mpegURL"
