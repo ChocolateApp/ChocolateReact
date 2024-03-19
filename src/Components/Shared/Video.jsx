@@ -238,7 +238,7 @@ export const Video = (props) => {
                   {volumeIcon}
                 </div>
                 <div className="video-player-volumebar-container icons-container" style={{ opacity: volumeHovered ? 1 : '' }} onMouseEnter={handleHoverVolume} onMouseLeave={handleLeaveVolume}>
-                  <input type="range" className="video-player-volumebar video-slider" min={0} max={1} step={0.01} value={volume} onChange={handleVolumeChange} />
+                  <input type="range" className="video-player-volumebar video-slider" min={0} max={1} step={0.001} value={volume} onChange={handleVolumeChange} />
                 </div>
               </div>
             </div>
@@ -293,8 +293,10 @@ export const Video = (props) => {
           </div>
 
           <div className='player-buttons'>
-            {previousURL && <Buttons text={previousText} onClick={() => navigate(previousURL)} />}
-            {nextURL && <Buttons text={nextText} onClick={() => navigate(nextURL)} />}
+            {!previousURL.endsWith("/null") && <Buttons text={previousText} onClick={() => navigate(previousURL)} />}
+            {previousURL.endsWith("/null") && <div></div>}
+            {!nextURL.endsWith("/null") && <Buttons text={nextText} onClick={() => navigate(nextURL)} />}
+            {nextURL.endsWith("/null") && <div></div>}
           </div>
         </div>
       </div>
