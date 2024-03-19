@@ -87,8 +87,7 @@ function CheckLogin() {
         token: localStorage.getItem('token'),
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (resMsg !== null) {
@@ -159,18 +158,16 @@ export const Layout = ({ children }) => {
 
   const isAuthenticated = localStorage.getItem('token') !== null
   const location = useLocation();
-  const pathname = "/"+location.pathname.split('/')[1];
+  const pathname = "/" + location.pathname.split('/')[1];
   let no_login = false
-  //for all children props, print the path
+
   for (let i = 0; i < children.props.children.length; i++) {
-    const child_path = "/"+children.props.children[i].props.path.split('/')[1]
+    const child_path = "/" + children.props.children[i].props.path.split('/')[1]
     if (child_path === pathname) {
       no_login = children.props.children[i].props.no_login || false
       break;
     }
   }
-
-  console.log(pathname, no_login)
 
   return (
     <>
@@ -183,15 +180,15 @@ export const Layout = ({ children }) => {
           <CheckLogin />
           {children}
         </>
-        ) : no_login ? (
-          <>
-            {children}
-          </>
-        ) : (
-          <>
-            <Login />
-          </>
-        )
+      ) : no_login ? (
+        <>
+          {children}
+        </>
+      ) : (
+        <>
+          <Login />
+        </>
+      )
       }
     </>
   );
