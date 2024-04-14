@@ -206,8 +206,6 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   const handleVideoStream = (duration) => {
     //remove duplication in captions
     setCaptions(prevCaptions => [...new Set(prevCaptions.map(JSON.stringify))].map(JSON.parse));
-    console.log(captions);
-    console.log(selectedCaption);
     setProgress(duration);
     checkSkipButton();
 
@@ -219,10 +217,8 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
       let start = convertTime(segments[i].start);
       let end = convertTime(segments[i].end);
       let text = segments[i].text;
-      console.log(start, end, text);
       if (currentTime >= start && currentTime <= end) {
         setCurrentCaption(text);
-        console.log(text);
         return;
       } else if (currentTime < start) {
         setCurrentCaption(null);
@@ -344,8 +340,6 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   };
 
   const handleCaptionSelection = (caption) => {
-    console.log(caption);
-    console.log(selectedCaption);
     if (selectedCaption && caption && selectedCaption.id === caption.id) {
       setSelectedCaption(null);
       setCurrentCaption(null);
@@ -356,10 +350,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   };
 
   useEffect(() => {
-    //check every second, if the mouse haven't moved in the last 5 seconds, add 'disabled' class to the player controls
     const interval = setInterval(() => {
-      //console.log(`Time of previous mouse movement: ${timeOfPreviousMouseMovement}`);
-      //console.log(`Spent time since last mouse movement: ${new Date().getTime() - timeOfPreviousMouseMovement}`);
       if (new Date().getTime() - timeOfPreviousMouseMovement > 5000) {
         if (playerControls.current.classList.contains('disabled')) return;
         playerControls.current.classList.add('disabled');
