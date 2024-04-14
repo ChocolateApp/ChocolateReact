@@ -414,7 +414,11 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
         />
         <div className='player-overlay'>
           <div className='player-subtitle'>
-            <p>{currentCaption}</p>
+            {/<[a-z][\s\S]*>/i.test(currentCaption) ? (
+              <p dangerouslySetInnerHTML={{ __html: currentCaption }} />
+            ) : (
+              <p>{currentCaption}</p>
+            )}
           </div>
           <div className='player-loader'>
             {isLoading && <div className="spinner"></div>}
