@@ -1834,14 +1834,16 @@ input[type="range"].video-slider:disabled::-moz-range-progress {
   padding-bottom: 18px;
   background: linear-gradient(0deg, black, transparent);
   padding-top: 60px;
+  opacity: 1;
+  pointer-events: all;
+  transition: all 0.5s ease-in-out;
 }
 
-.controls-hidden {
-  bottom: -10dvh;
-}
-
-.player-buttons-hidden {
-  bottom: calc(-10dvh - 42px);
+.player-controls.disabled,
+.player-controls.disabled * {
+  transition: all 0.5s ease-in-out;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .player-controls svg {

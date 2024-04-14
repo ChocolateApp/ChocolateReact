@@ -6,13 +6,12 @@ import { useNavigate } from 'react-router-dom';
 
 import Buttons from "../../Components/Shared/Buttons";
 
-export const Video = (props) => {
-  const { options, onReady, previousURL, previousText, nextURL, nextText } = props;
-
+export const Video = ({ options, onReady = () => { }, previousURL = null, previousText = "", nextURL = null, nextText = "", periodsToSkip = null }) => {
   const navigate = useNavigate();
 
   const player = useRef(null);
   const playerContainer = useRef(null);
+  const playerControls = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -22,7 +21,12 @@ export const Video = (props) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [pip, setPip] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [timeOfPreviousClick, setTimeOfPreviousClick] = useState(0);
+  const [skipButtonVisible, setSkipButtonVisible] = useState(false);
+  const [skipButtonText, setSkipButtonText] = useState('Skip Intro');
+  const [skipButtonTime, setSkipButtonTime] = useState(0);
+  const [skipButtonType, setSkipButtonType] = useState('intro');
+  const [timeOfPreviousClick, setTimeOfPreviousClick] = useState(0);// eslint-disable-line no-unused-vars
+  const [timeOfPreviousMouseMovement, setTimeOfPreviousMouseMovement] = useState(0);// eslint-disable-line no-unused-vars
 
 
   const [volumeIcon, setVolumeIcon] = useState(<IoVolumeHigh className="video-player-volume-icon player-control-icon" />);
@@ -87,9 +91,43 @@ export const Video = (props) => {
     setProgress(progress + seconds);
   }
 
+  function goToDuration(seconds) {
+    player.current.seekTo(seconds);
+    setProgress(seconds);
+  }
+
+  function goTo(percent) {
+    player.current.seekTo(duration * percent);
+    setProgress(duration * percent);
+  }
+
+  function checkSkipButton() {
+    let currentTime = progress;
+    const typeToText = {
+      'intro': 'Skip Intro',
+      'outro': 'Skip Outro',
+      'recap': 'Skip Recap'
+    }
+    if (periodsToSkip == null || periodsToSkip.length === 0) return;
+    for (let i = 0; i < periodsToSkip.length; i++) {
+      let start_time = parseFloat(periodsToSkip[i].start_time);
+      let end_time = parseFloat(periodsToSkip[i].end_time);
+      let type = periodsToSkip[i].type;
+      if (currentTime >= Math.max(start_time - 5, 0) && currentTime <= end_time - 1) {
+        setSkipButtonType(type);
+        setSkipButtonVisible(true);
+        setSkipButtonText(typeToText[periodsToSkip[i].type]);
+        setSkipButtonTime(end_time);
+        return;
+      }
+    }
+    setSkipButtonVisible(false);
+  }
+
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
       if (e.key === ' ') {
         e.preventDefault();
         togglePlayPause();
@@ -111,6 +149,9 @@ export const Video = (props) => {
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         handleVolumeChange({ target: { value: volume - 0.1 } });
+      } else if (numbers.includes(e.key)) {
+        e.preventDefault();
+        goTo(parseInt(e.key) / 10);
       }
     };
 
@@ -130,13 +171,16 @@ export const Video = (props) => {
       try {
         document.exitFullscreen()
       } catch (e) {
-        //do nothing
       }
     } else {
       playerContainer.current.requestFullscreen();
     }
   }
 
+  const handleVideoStream = (duration) => {
+    setProgress(duration);
+    checkSkipButton();
+  }
 
   useEffect(() => {
     let volume = localStorage.getItem('volume');
@@ -174,8 +218,28 @@ export const Video = (props) => {
     });
   };
 
+  const handleMouseMovement = () => {
+    setTimeOfPreviousMouseMovement(new Date().getTime());
+  };
+
+  useEffect(() => {
+    //check every second, if the mouse haven't moved in the last 5 seconds, add 'disabled' class to the player controls
+    const interval = setInterval(() => {
+      //console.log(`Time of previous mouse movement: ${timeOfPreviousMouseMovement}`);
+      //console.log(`Spent time since last mouse movement: ${new Date().getTime() - timeOfPreviousMouseMovement}`);
+      if (new Date().getTime() - timeOfPreviousMouseMovement > 5000) {
+        playerControls.current.classList.add('disabled');
+        console.log('added class');
+      } else {
+        playerControls.current.classList.remove('disabled');
+        console.log('removed class');
+      }
+    });
+    return () => clearInterval(interval);
+  })
+
   return (
-    <>
+    <div onMouseMove={handleMouseMovement}>
       <div className='player-wrapper' ref={playerContainer}>
         <ReactPlayer
           ref={player}
@@ -193,7 +257,7 @@ export const Video = (props) => {
           onEnablePIP={() => setPip(true)}
           onDisablePIP={() => setPip(false)}
           onDuration={(duration) => setDuration(duration)}
-          onProgress={(progress) => { setProgress(progress.playedSeconds); }}
+          onProgress={(progress) => { handleVideoStream(progress.playedSeconds); }}
           onClick={handleVideoClick}
           onPause={() => setIsPlaying(false)}
           onPlay={() => setIsPlaying(true)}
@@ -220,7 +284,7 @@ export const Video = (props) => {
           <div className='player-loader'>
             {isLoading && <div className="spinner"></div>}
           </div>
-          <div className='player-controls'>
+          <div className='player-controls' ref={playerControls}>
             <div className='player-controls-left'>
               {isPlaying ? (
                 <IoPause
@@ -291,16 +355,27 @@ export const Video = (props) => {
               </div>
             </div>
           </div>
+          {/*
+            {(!previousText || !previousURL || previousURL.endsWith("/null")) ? <Buttons text={previousText} onClick={() => navigate(previousURL)} /> : <div></div>}
+
+            {(((!nextURL || !nextURL.endsWith("/null")) && !skipButtonVisible) || skipButtonType === 'outro') && <Buttons text={"nextEpisode"} onClick={() => navigate(nextURL)} />}
+
+            {skipButtonVisible && skipButtonType !== 'outro' && <Buttons text={skipButtonText} onClick={() => goToDuration(skipButtonTime - 1)} />}
+            {(nextURL && !skipButtonVisible && nextURL.endsWith("/null")) && <div></div>}
+            */}
 
           <div className='player-buttons'>
-            {!previousURL.endsWith("/null") && <Buttons text={previousText} onClick={() => navigate(previousURL)} />}
-            {previousURL.endsWith("/null") && <div></div>}
-            {!nextURL.endsWith("/null") && <Buttons text={nextText} onClick={() => navigate(nextURL)} />}
-            {nextURL.endsWith("/null") && <div></div>}
+            {/* Previous button */}
+            {(skipButtonVisible && previousURL !== null) ? <Buttons text={previousText} onClick={() => navigate(previousURL)} /> : <div></div>}
+
+            {/* Skip button */}
+            {(skipButtonVisible && nextURL !== null && skipButtonType === 'outro') ? <Buttons text={nextText} onClick={() => navigate(nextURL)} /> :
+              (skipButtonVisible && nextURL !== null && skipButtonType !== 'outro') ? <Buttons text={skipButtonText} onClick={() => goToDuration(skipButtonTime - 1)} /> : <div></div>
+            }
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
