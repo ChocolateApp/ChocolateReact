@@ -43,7 +43,7 @@ export default function Movie() {
             <JustCog />
             <Back path={"/season/" + episode?.season_id} />
             <h1 className="videoTitle">EP{episode?.episode_number} - {episode?.episode_name}</h1>
-            <Video options={options} previousURL={"/episode/" + episode?.previous_episode} nextURL={"/episode/" + episode?.next_episode} previousText={getLang("previous")} nextText={getLang("next")} />
+            <Video options={options} previousURL={"/episode/" + episode?.previous_episode} nextURL={"/episode/" + episode?.next_episode} previousText={getLang("previous")} nextText={getLang("next")} periodsToSkip={episode?.recurring} />
         </>
     );
 }
