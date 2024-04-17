@@ -1821,6 +1821,11 @@ input[type="range"].video-slider:disabled::-moz-range-progress {
   overflow: hidden;
 }
 
+.cursor-none,
+.cursor-none * {
+  cursor: none !important;
+}
+
 .player-controls {
   position: absolute;
   bottom: 0;
@@ -1904,8 +1909,8 @@ svg.player-control-icon {
 .player-subtitles-popup {
   transition: opacity 0.1s ease-in-out;
   position: absolute;
-  right: 1.5vw;
-  width: 10vw;
+  right: 25px;
+  width: auto;
   background: rgb(0 0 0 / 40%);
   display: flex;
   justify-content: center;
@@ -1920,10 +1925,7 @@ svg.player-control-icon {
   display: flex;
   gap: 12px;
   cursor: pointer;
-}
-
-.player-caption h3 {
-  width: 6vw;
+  justify-content: space-between;
 }
 
 .player-caption div {

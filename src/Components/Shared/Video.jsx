@@ -1,36 +1,62 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { IoPause, IoPlay, IoVolumeMute, IoVolumeHigh, IoVolumeLow, IoVolumeMedium, IoCheckmark } from 'react-icons/io5';
-import { MdFullscreen, MdFullscreenExit, MdPictureInPicture, MdPictureInPictureAlt, MdSubtitles } from 'react-icons/md'; // eslint-disable-line no-unused-vars
+import { MdFullscreen, MdFullscreenExit, MdPictureInPicture, MdPictureInPictureAlt, MdSubtitles, MdSpatialAudioOff } from 'react-icons/md'; // eslint-disable-line no-unused-vars
 import { useNavigate } from 'react-router-dom';
+import { useCast, CastButton } from 'react-castjs'
+
 
 import Buttons from "../../Components/Shared/Buttons";
 
 export const Video = ({ options, onReady = () => { }, previousURL = null, previousText = "", nextURL = null, nextText = "", periodsToSkip = null }) => {
   const navigate = useNavigate();
 
+  const auth = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }
+
+
+  const { chromecast } = useCast()
+
   const player = useRef(null);
   const playerContainer = useRef(null);
   const playerControls = useRef(null);
 
+  // Video player states
+  // Some states to manage the video player
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(0.5);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [pip, setPip] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Audio player states
+  // Some states to manage the audio player
+  const [volume, setVolume] = useState(1);
+
+  // Skip button states
+  // Some states to manage the skip button
   const [skipButtonVisible, setSkipButtonVisible] = useState(false);
   const [skipButtonText, setSkipButtonText] = useState('Skip Intro');
   const [skipButtonTime, setSkipButtonTime] = useState(0);
   const [skipButtonType, setSkipButtonType] = useState('intro');
+
+  // Video controls states
+  // Some states to manage the video controls
   const [timeOfPreviousClick, setTimeOfPreviousClick] = useState(0);// eslint-disable-line no-unused-vars
   const [timeOfPreviousMouseMovement, setTimeOfPreviousMouseMovement] = useState(0);
   const [subtitlesOpen, setSubtitlesOpen] = useState(false);
-  const [captions, setCaptions] = useState([]);
-  const [selectedCaption, setSelectedCaption] = useState(null);
-  const [currentCaption, setCurrentCaption] = useState(null);
+  const [audioTrackOpen, setAudioTrachOpen] = useState(false);
+
+  // Captions states
+  const [captions, setCaptions] = useState([]); // the list of captions objects
+  const [selectedCaption, setSelectedCaption] = useState(null); // the full caption object
+  const [currentCaption, setCurrentCaption] = useState(null); // the current caption text
+
+  // Audio track states
+  const [audioTracks, setAudioTracks] = useState([]); // the list of audio tracks objects
+  const [selectedAudioTrack, setSelectedAudioTrack] = useState(null); // the full audio track object
+
 
 
   const [volumeIcon, setVolumeIcon] = useState(<IoVolumeHigh className="video-player-volume-icon player-control-icon" />);
@@ -209,6 +235,12 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
     setProgress(duration);
     checkSkipButton();
 
+
+    if (selectedAudioTrack == null) {
+      setSelectedAudioTrack(audioTracks[0]);
+    }
+    console.log(selectedAudioTrack)
+
     if (!selectedCaption) return;
 
     let currentTime = duration;
@@ -237,16 +269,11 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
       }
     };
 
-    const fetchSubtitles = async () => {
+    const fetchSubtitlesAndAudio = async () => {
       try {
         const video_url = options.sources[0].src;
         const parent_url = video_url.split('/').slice(0, -2).join('/');
-        const response = await fetch(video_url, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const response = await fetch(video_url, auth);
         const data = await response.text();
         const m3u8_file = data.split('\n');
 
@@ -260,21 +287,11 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
             caption_data['segments'] = [];
             const args = line.split(',');
             const uri = parent_url + args[5].split('"')[1];
-            const response = await fetch(uri, {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
-            });
+            const response = await fetch(uri, auth);
             const vtt_data = await response.text();
             const vtt_file = vtt_data.split('\n')[vtt_data.split('\n').length - 3];
             const vtt_uri = parent_url + vtt_file;
-            const vtt_response = await fetch(vtt_uri, {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
-            });
+            const vtt_response = await fetch(vtt_uri, auth);
             const vtt_text = await vtt_response.text();
             const lines = vtt_text.split('\n');
             let index = 0;
@@ -297,8 +314,17 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
               }
               index++;
             }
-            //check if the caption already exists
+
             setCaptions(prevCaptions => [...prevCaptions, caption_data]);
+          } else if (line.startsWith('#AUDIO-MEDIA')) {
+            console.log(line);
+            const audio_data = {};
+            audio_data['id'] = line.split('URI="')[1].split('"')[0].split("_")[2].split('.')[0];
+            audio_data['name'] = line.split('NAME="')[1].split('"')[0];
+            audio_data['language'] = line.split('LANGUAGE="')[1].split('"')[0];
+            audio_data['uri'] = parent_url + line.split('URI="')[1].split('"')[0];
+            console.log(audio_data);
+            setAudioTracks(prevAudioTracks => [...prevAudioTracks, audio_data]);
           }
         }
       } catch (error) {
@@ -307,7 +333,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
     };
 
     fetchVolume();
-    fetchSubtitles();
+    fetchSubtitlesAndAudio();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
@@ -349,22 +375,94 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
     setSubtitlesOpen(false);
   };
 
+  const handleAudioTrackSelection = (audioTrack) => {
+    if (selectedAudioTrack && audioTrack && selectedAudioTrack.id === audioTrack.id) {
+      setSelectedAudioTrack(null);
+      return;
+    }
+    setSelectedAudioTrack(audioTrack);
+    setAudioTrachOpen(false);
+  };
+
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (new Date().getTime() - timeOfPreviousMouseMovement > 5000) {
         if (playerControls.current.classList.contains('disabled')) return;
         playerControls.current.classList.add('disabled');
         setSubtitlesOpen(false);
+        playerContainer.current.classList.add('cursor-none')
       } else {
         playerControls.current.classList.remove('disabled');
+        playerContainer.current.classList.remove('cursor-none')
       }
     });
     return () => clearInterval(interval);
   })
 
+
+  useEffect(() => {
+    console.log('cast init')
+    function onAvailable() {
+      console.log('available')
+    }
+
+    chromecast.on('available', onAvailable)
+
+    chromecast.on('connect', () => {
+      console.log('connect')
+    })
+
+    chromecast.on('disconnect', () => {
+      console.log('disconnect')
+    })
+
+    chromecast.on('playing', () => {
+      setIsPlaying(true)
+      console.log('playing')
+    })
+
+    chromecast.on('pause', () => {
+      setIsPlaying(false)
+      console.log('pause')
+    })
+
+    chromecast.on('error', (e) => {
+      console.error(e)
+    })
+
+    // remove event listeners
+    return function cleanup() {
+      chromecast.off('connect')
+      chromecast.off('disconnect')
+      // remove specific listener
+      chromecast.off('available', onAvailable)
+      chromecast.off('pause')
+      chromecast.off('playing')
+      chromecast.off('error')
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+
+  const handleCast = () => {
+    try {
+      if (chromecast.available) {
+        if (chromecast.connected) {
+          chromecast.disconnect()
+        }
+        chromecast.cast(options.sources[0].src, {
+          title: 'Video Title',
+        })
+      }
+    }
+    catch (e) {
+      console.error(e)
+    }
+  }
+
   return (
     <div onMouseMove={handleMouseMovement}>
-      <div className='player-wrapper' ref={playerContainer}>
+      <div className='player-wrapper' ref={playerContainer} data-video-timestamp={player.current ? player.current.getCurrentTime() : 0}>
         <ReactPlayer
           ref={player}
           url={options.sources[0].src}
@@ -383,21 +481,26 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
           onDuration={(duration) => setDuration(duration)}
           onProgress={(progress) => { handleVideoStream(progress.playedSeconds); }}
           onClick={handleVideoClick}
-          onPause={() => setIsPlaying(false)}
-          onPlay={() => setIsPlaying(true)}
-          onBuffer={() => setIsLoading(true)}
+          onPause={() => {
+            setIsPlaying(false);
+          }}
+          onPlay={() => {
+            setIsPlaying(true);
+          }}
+          onBuffer={() => {
+            setIsLoading(true);
+          }}
           onBufferEnd={() => setIsLoading(false)}
-          onEnded={() => setIsPlaying(false)}
+          onEnded={() => {
+            setIsPlaying(false);
+          }}
           config={{
             file: {
               forceHLS: true,
               hlsOptions: {
                 xhrSetup: function (xhr, url) {
                   xhr.open("GET", url, true);
-                  xhr.setRequestHeader(
-                    "Authorization",
-                    `Bearer ${localStorage.getItem('token')}`
-                  );
+                  xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('token')}`);
                 },
               },
             }
@@ -438,7 +541,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
             </div>
             <div className='player-controls-center'>
               <div className='player-progress'>
-                <input type='range' min='0' max={duration} value={progress} className='video-player-progress video-slider' onChange={(e) => player.current.seekTo(e.target.value)} />
+                <input type='range' min='0' max={duration} value={progress} className='video-player-progress video-slider' onChange={(e) => { player.current.seekTo(e.target.value); setProgress(e.target.value) }} />
               </div>
             </div>
             <div className='player-controls-right'>
@@ -447,12 +550,31 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
                 <span>/</span>
                 <span>{formatTime(duration)}</span>
               </div>
+              <div className='player-cast'>
+                <CastButton onClick={handleCast} />
+              </div>
+              <div className='player-subtitles-popup' style={{ opacity: audioTrackOpen ? '1' : '0', pointerEvents: audioTrackOpen ? 'all' : 'none' }}>
+                {audioTracks.map((audioTrack, index) => {
+                  return (
+                    <div key={index} className='player-caption' onClick={() => handleAudioTrackSelection(audioTrack)}>
+                      {(selectedAudioTrack && selectedAudioTrack.id === audioTrack.id) ? <IoCheckmark className='player-control-icon' /> : <div></div>}
+                      <h3>{audioTrack.name}</h3>
+                      <div></div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className='player-subtitles-selector'>
+                <MdSpatialAudioOff className='player-control-icon' onClick={() => setAudioTrachOpen(!audioTrackOpen)} />
+              </div>
+
               <div className='player-subtitles-popup' style={{ opacity: subtitlesOpen ? '1' : '0', pointerEvents: subtitlesOpen ? 'all' : 'none' }}>
                 {captions.map((caption, index) => {
                   return (
                     <div key={index} className='player-caption' onClick={() => handleCaptionSelection(caption)}>
                       {(selectedCaption && selectedCaption.id === caption.id) ? <IoCheckmark className='player-control-icon' /> : <div></div>}
-                      <h3>{caption.name} ({caption.language})</h3>
+                      <h3>{caption.name}</h3>
+                      <div></div>
                     </div>
                   );
                 })}
@@ -488,15 +610,6 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
               </div>
             </div>
           </div>
-          {/*
-            {(!previousText || !previousURL || previousURL.endsWith("/null")) ? <Buttons text={previousText} onClick={() => navigate(previousURL)} /> : <div></div>}
-
-            {(((!nextURL || !nextURL.endsWith("/null")) && !skipButtonVisible) || skipButtonType === 'outro') && <Buttons text={"nextEpisode"} onClick={() => navigate(nextURL)} />}
-
-            {skipButtonVisible && skipButtonType !== 'outro' && <Buttons text={skipButtonText} onClick={() => goToDuration(skipButtonTime - 1)} />}
-            {(nextURL && !skipButtonVisible && nextURL.endsWith("/null")) && <div></div>}
-            */}
-
           <div className='player-buttons'>
             {/* Previous button */}
             {(skipButtonVisible && previousURL !== null) ? <Buttons text={previousText} onClick={() => navigate(previousURL)} /> : <div></div>}

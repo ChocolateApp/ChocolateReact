@@ -7,6 +7,9 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { create } from 'zustand';
+
+import { CastProvider } from 'react-castjs'
+
 import { usePost, useGet } from './Utils/Fetch';
 
 import Home from './Pages/Home';
@@ -171,25 +174,27 @@ export const Layout = ({ children }) => {
 
   return (
     <>
-      <LanguageFile />
-      <ReactNotifications />
-      {isAuthenticated && !no_login ? (
-        <>
-          <AudioPlayer store={useAudioPlayerStore} />
-          <Header />
-          <CheckLogin />
-          {children}
-        </>
-      ) : no_login ? (
-        <>
-          {children}
-        </>
-      ) : (
-        <>
-          <Login />
-        </>
-      )
-      }
+      <CastProvider>
+        <LanguageFile />
+        <ReactNotifications />
+        {isAuthenticated && !no_login ? (
+          <>
+            <AudioPlayer store={useAudioPlayerStore} />
+            <Header />
+            <CheckLogin />
+            {children}
+          </>
+        ) : no_login ? (
+          <>
+            {children}
+          </>
+        ) : (
+          <>
+            <Login />
+          </>
+        )
+        }
+      </CastProvider>
     </>
   );
 };
