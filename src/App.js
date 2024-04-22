@@ -7,6 +7,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { create } from 'zustand';
+
 import { usePost, useGet } from './Utils/Fetch';
 
 import Home from './Pages/Home';
@@ -51,6 +52,11 @@ import CreateAccount from './Pages/CreateAccount';
 
 import "./App.css";
 
+import { Cast } from '@jdion/cast';
+import { CastProvider } from '@jdion/cast-react';
+
+const castInstance = new Cast();
+
 const useAudioPlayerStore = create((set) => ({
   visible: false,
   setVisible: (visible) => set({ visible }),
@@ -87,8 +93,7 @@ function CheckLogin() {
         token: localStorage.getItem('token'),
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (resMsg !== null) {
@@ -159,18 +164,16 @@ export const Layout = ({ children }) => {
 
   const isAuthenticated = localStorage.getItem('token') !== null
   const location = useLocation();
-  const pathname = "/"+location.pathname.split('/')[1];
+  const pathname = "/" + location.pathname.split('/')[1];
   let no_login = false
-  //for all children props, print the path
+
   for (let i = 0; i < children.props.children.length; i++) {
-    const child_path = "/"+children.props.children[i].props.path.split('/')[1]
+    const child_path = "/" + children.props.children[i].props.path.split('/')[1]
     if (child_path === pathname) {
       no_login = children.props.children[i].props.no_login || false
       break;
     }
   }
-
-  console.log(pathname, no_login)
 
   return (
     <>
@@ -181,17 +184,19 @@ export const Layout = ({ children }) => {
           <AudioPlayer store={useAudioPlayerStore} />
           <Header />
           <CheckLogin />
+          <CastProvider instance={castInstance}>
+            {children}
+          </CastProvider>
+        </>
+      ) : no_login ? (
+        <>
           {children}
         </>
-        ) : no_login ? (
-          <>
-            {children}
-          </>
-        ) : (
-          <>
-            <Login />
-          </>
-        )
+      ) : (
+        <>
+          <Login />
+        </>
+      )
       }
     </>
   );

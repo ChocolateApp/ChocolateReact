@@ -1,31 +1,25 @@
 {
   "name": "chocolate_react",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
-    "@aka_theos/react-hls-player": "^1.0.0",
-    "@nicolasroehm/ngx-retroarch": "^1.0.4",
+    "@jdion/cast": "^1.0.4",
+    "@jdion/cast-react": "^1.0.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@videojs/http-streaming": "2.16.0",
     "aos": "^2.3.4",
-    "howler": "^2.2.3",
+    "hls.js": "^1.5.8",
     "react": "^18.2.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.8.0",
     "react-notifications-component": "^4.0.1",
-    "react-player": "^2.12.0",
     "react-router-dom": "^6.11.1",
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.5",
     "swiper": "^9.3.2",
-    "video.js": "8.2.0",
-    "videojs": "^1.0.0",
-    "videojs-contrib-hls": "^5.15.0",
-    "videojs-contrib-quality-levels": "^4.0.0",
     "web-vitals": "^2.1.4",
     "zustand": "^4.3.9"
   },
@@ -46,7 +40,11 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not safari < 10",
+      "not chrome < 51",
+      "not android < 5",
+      "not ie < 12"
     ],
     "development": [
       "last 1 chrome version",

@@ -50,7 +50,7 @@ export default function MovieBanner({ name, description, id, full_banner=false }
                 <div className="banner-buttons">
                     <div className="banner-buttons-left">
                         <Buttons icon={<IoPlayOutline />} text="Watch now" onClick={() => navigate("/movie/"+id)} />
-                        <Buttons icon={<IoDownloadOutline />} text="Download" onClick={() => window.location.href = `${process.env.REACT_APP_DEV_URL}/downloadMovie/${id}`} />
+                        <Buttons icon={<IoDownloadOutline />} text="Download" onClick={() => window.location.href = `${process.env.REACT_APP_DEV_URL}/download_movie/${id}`} />
                     </div>
                     <div className="banner-buttons-right">
                         <Buttons icon={<IoRefreshOutline />} text="Refresh" onClick={refresh} />
