@@ -20,17 +20,12 @@ export default function Movie() {
     }
 
     const options = {
-        autoplay: true,
-        controls: true,
-        preload: "none",
-        techOrder: ['chromecast', 'html5', 'hls'],
+        title: data?.realTitle,
         sources: [{
             src: `${process.env.REACT_APP_DEV_URL}/main_movie/${id}`,
-            type: "application/x-mpegURL"
+            type: "application/vnd.apple.mpegurl"
         }],
-        html5: {
-            nativeTextTracks: false
-        },
+        cover: `${process.env.REACT_APP_DEV_URL}/movie_cover/${id}`,
     }
 
     return (

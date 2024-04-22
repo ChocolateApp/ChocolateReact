@@ -8,8 +8,6 @@ import 'aos/dist/aos.css';
 
 import { create } from 'zustand';
 
-import { CastProvider } from 'react-castjs'
-
 import { usePost, useGet } from './Utils/Fetch';
 
 import Home from './Pages/Home';
@@ -53,6 +51,11 @@ import Profil from './Pages/Profil';
 import CreateAccount from './Pages/CreateAccount';
 
 import "./App.css";
+
+import { Cast } from '@jdion/cast';
+import { CastProvider } from '@jdion/cast-react';
+
+const castInstance = new Cast();
 
 const useAudioPlayerStore = create((set) => ({
   visible: false,
@@ -174,27 +177,27 @@ export const Layout = ({ children }) => {
 
   return (
     <>
-      <CastProvider>
-        <LanguageFile />
-        <ReactNotifications />
-        {isAuthenticated && !no_login ? (
-          <>
-            <AudioPlayer store={useAudioPlayerStore} />
-            <Header />
-            <CheckLogin />
+      <LanguageFile />
+      <ReactNotifications />
+      {isAuthenticated && !no_login ? (
+        <>
+          <AudioPlayer store={useAudioPlayerStore} />
+          <Header />
+          <CheckLogin />
+          <CastProvider instance={castInstance}>
             {children}
-          </>
-        ) : no_login ? (
-          <>
-            {children}
-          </>
-        ) : (
-          <>
-            <Login />
-          </>
-        )
-        }
-      </CastProvider>
+          </CastProvider>
+        </>
+      ) : no_login ? (
+        <>
+          {children}
+        </>
+      ) : (
+        <>
+          <Login />
+        </>
+      )
+      }
     </>
   );
 };

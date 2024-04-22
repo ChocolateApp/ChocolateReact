@@ -23,17 +23,12 @@ export default function Channel() {
     }, [data])
 
     const options = {
-        autoplay: true,
-        controls: true,
-        preload: "none",
-        techOrder: ['chromecast', 'html5', 'hls'],
+        title: channelData?.channel_name,
         sources: [{
             src: channelData && channelData.channel_url ? channelData.channel_url : "",
-            type: "application/x-mpegURL"
+            type: "application/vnd.apple.mpegurl"
         }],
-        html5: {
-            nativeTextTracks: false
-        }
+        cover: channelData?.channel_image,
     };
 
     return (

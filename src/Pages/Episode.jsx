@@ -24,17 +24,12 @@ export default function Movie() {
     }
 
     const options = {
-        autoplay: true,
-        controls: true,
-        preload: "none",
-        techOrder: ['chromecast', 'html5', 'hls'],
+        title: `EP${episode?.episode_number} - ${episode?.episode_name}`,
         sources: [{
             src: `${process.env.REACT_APP_DEV_URL}/main_serie/${id}`,
-            type: "application/x-mpegURL"
+            type: "application/vnd.apple.mpegurl"
         }],
-        html5: {
-            nativeTextTracks: false
-        },
+        cover: `${process.env.REACT_APP_DEV_URL}/episode_cover/${episode?.episode_id}`,
     };
 
 

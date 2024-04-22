@@ -1,20 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IoPause, IoPlay, IoVolumeMute, IoVolumeHigh, IoVolumeLow, IoVolumeMedium, IoCheckmark } from 'react-icons/io5';
-import { MdFullscreen, MdFullscreenExit, MdPictureInPicture, MdPictureInPictureAlt, MdSubtitles, MdSpatialAudioOff } from 'react-icons/md'; // eslint-disable-line no-unused-vars
+import { IoPause, IoPlay, IoVolumeMute, IoVolumeHigh, IoVolumeLow, IoVolumeMedium, IoCheckmark, IoSettingsSharp } from 'react-icons/io5';
+import { MdFullscreen, MdFullscreenExit, MdPictureInPicture, MdPictureInPictureAlt, MdSubtitles, MdSpatialAudioOff, MdOutlineCast } from 'react-icons/md'; // eslint-disable-line no-unused-vars
 import { useNavigate } from 'react-router-dom';
-import { useCast, CastButton } from 'react-castjs'
-import Hls from "hls.js";
+import { useCast, useEventListener } from '@jdion/cast-react';
 
+import Hls from "hls.js";
 
 import Buttons from "../../Components/Shared/Buttons";
 
-export const Video = ({ options, onReady = () => { }, previousURL = null, previousText = "", nextURL = null, nextText = "", periodsToSkip = null }) => {
+
+export const Video = ({ options, previousURL = null, previousText = "", nextURL = null, nextText = "", periodsToSkip = null }) => {
   const navigate = useNavigate();
+  const { player: chromecastPlayer } = useCast()
 
-  const auth = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }
+  useEventListener('castStateChanged')
+  useEventListener('playerStateChanged')
 
-
-  const { chromecast } = useCast()
 
   const player = useRef(null);
   const playerContainer = useRef(null);
@@ -26,6 +27,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   const [progress, setProgress] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [HLS, setHLS] = useState(null);
+
   // Audio player states
   // Some states to manage the audio player
   const [volume, setVolume] = useState(1);
@@ -43,6 +45,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   const [timeOfPreviousMouseMovement, setTimeOfPreviousMouseMovement] = useState(0);
   const [subtitlesOpen, setSubtitlesOpen] = useState(false);
   const [audioTrackOpen, setAudioTrackOpen] = useState(false);
+  const [qualityOpen, setQualityOpen] = useState(false);
 
   // Captions states
   const [captions, setCaptions] = useState([]); // the list of captions objects
@@ -52,12 +55,17 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   const [audioTracks, setAudioTracks] = useState([]); // the list of audio tracks objects
   const [selectedAudioTrack, setSelectedAudioTrack] = useState(null); // the audio track id
 
+  // Quality states
+  const [qualities, setQualities] = useState([]); // the list of qualities objects
+  const [selectedQuality, setSelectedQuality] = useState(null); // the quality id
 
 
   const [volumeIcon, setVolumeIcon] = useState(<IoVolumeHigh className="video-player-volume-icon player-control-icon" />);
   const [volumeHovered, setVolumeHovered] = useState(false);
 
-  const togglePlayPause = () => {
+  const togglePlayPause = (e) => {
+    e && e.stopPropagation();
+    e && e.preventDefault();
     if (player.current.paused) {
       player.current.play();
     } else {
@@ -83,28 +91,6 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
     } else {
       return `00:00:${ss}`;
     }
-  }
-
-  function convertTime(timeString) {
-    const timeComponents = timeString.split(':');
-    let seconds = 0;
-
-    // Si le temps est au format hh:mm:ss.ms
-    if (timeComponents.length === 3) {
-      seconds += parseInt(timeComponents[0]) * 3600; // heures en secondes
-      seconds += parseInt(timeComponents[1]) * 60;   // minutes en secondes
-    } else if (timeComponents.length === 2) { // Si le temps est au format mm:ss.ms
-      seconds += parseInt(timeComponents[0]) * 60;   // minutes en secondes
-    }
-
-    // Ajoute les secondes et les millisecondes
-    const lastComponent = timeComponents[timeComponents.length - 1].split('.');
-    seconds += parseInt(lastComponent[0]); // secondes
-    if (lastComponent.length > 1) {
-      seconds += parseFloat("0." + lastComponent[1]); // millisecondes
-    }
-
-    return seconds;
   }
 
   function handleVolumeChange(e) {
@@ -180,7 +166,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   useEffect(() => {
     const handleKeyDown = (e) => {
       let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-      if (e.key === ' ') {
+      if (e.key === ' ' || e.key === 'k') {
         e.preventDefault();
         togglePlayPause();
       } else if (e.key === 'f') {
@@ -189,6 +175,19 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
       } else if (e.key === 'm') {
         e.preventDefault();
         toggleMute();
+      } else if (e.key === 'c') {
+        if (captions.length > 0 && HLS) {
+          e.preventDefault();
+          if (selectedCaption === null) {
+            setSelectedCaption(captions[0]);
+            HLS.subtitleTrack = captions[0].id;
+            HLS.subtitleDisplay = true;
+          } else {
+            setSelectedCaption(null);
+            HLS.subtitleTrack = -1;
+            HLS.subtitleDisplay = false;
+          }
+        }
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
         skip(10);
@@ -215,6 +214,13 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
+    if (isMuted) {
+      player.current.volume = volume;
+      setVolumeIcon(<IoVolumeHigh className="audio-player-volume-icon player-control-icon" />);
+    } else {
+      player.current.volume = 0;
+      setVolumeIcon(<IoVolumeMute className="audio-player-volume-icon player-control-icon" />);
+    }
   }
 
   const toggleFullscreen = () => {
@@ -230,7 +236,21 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   }
 
   const handleVideoStream = () => {
-    if (HLS && captions.length == 0) {
+
+    if (HLS && qualities.length === 0) {
+      let levels = HLS.levels;
+      for (let i = 0; i < levels.length; i++) {
+        let qualityObject = {
+          id: i,
+          height: levels[i].height + 'p',
+          bitrate: levels[i].bitrate,
+        };
+        setQualities(prevQualities => [...prevQualities, qualityObject]);
+      }
+    }
+
+
+    if (HLS && captions.length === 0) {
       let subtitleTracks = HLS.allSubtitleTracks;
       for (let i = 0; i < subtitleTracks.length; i++) {
         let subtitleObject = {
@@ -242,7 +262,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
       }
     }
 
-    if (HLS && audioTracks.length == 0) {
+    if (HLS && audioTracks.length === 0) {
       let audioTracks = HLS.audioTracks;
       for (let i = 0; i < audioTracks.length; i++) {
         let audioTrackObject = {
@@ -254,7 +274,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
       }
     }
 
-    if (HLS && selectedAudioTrack == null) {
+    if (HLS && selectedAudioTrack === null) {
       setSelectedAudioTrack(HLS.audioTrack);
     }
 
@@ -272,14 +292,7 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
             xhrSetup: function (xhr, url) {
               xhr.open("GET", url, true);
               xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('token')}`);
-              xhr.onerror = function () {
-                console.log('error', xhr.statusText);
-              }
-              xhr.onError = function () {
-                console.log('error', xhr.statusText);
-              }
             }
-
           });
           hls.loadSource(options.sources[0].src);
           hls.attachMedia(video);
@@ -309,11 +322,19 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
   const handleCaptionOpen = () => {
     setSubtitlesOpen(!subtitlesOpen);
     setAudioTrackOpen(false);
+    setQualityOpen(false);
   };
 
   const handleAudioTracksOpen = () => {
     setAudioTrackOpen(!audioTrackOpen);
     setSubtitlesOpen(false);
+    setQualityOpen(false);
+  };
+
+  const handleQualityOpen = () => {
+    setQualityOpen(!qualityOpen);
+    setSubtitlesOpen(false);
+    setAudioTrackOpen(false);
   };
 
   const handleCaptionSelection = (caption) => {
@@ -331,7 +352,6 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
 
   const handleAudioTrackSelection = (audioTrack) => {
     if (selectedAudioTrack && audioTrack && selectedAudioTrack === audioTrack.id) {
-      //get the first audio track in the list
       let audioTracks = HLS.audioTracks;
       setSelectedAudioTrack(audioTracks[0].id);
       HLS.audioTrack = audioTracks[0].id;
@@ -340,6 +360,22 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
     setSelectedAudioTrack(audioTrack.id);
     HLS.audioTrack = audioTrack.id;
     setAudioTrackOpen(false);
+  };
+
+  const handleQualitySelection = (quality) => {
+    if (!quality) {
+      setSelectedQuality(null);
+      HLS.currentLevel = -1;
+      return;
+    }
+    if (selectedQuality && quality && selectedQuality === quality.id) {
+      setSelectedQuality(null);
+      HLS.currentLevel = -1;
+      return;
+    }
+    setSelectedQuality(quality.id);
+    HLS.currentLevel = quality.id;
+    setQualityOpen(false);
   };
 
 
@@ -358,63 +394,18 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
     return () => clearInterval(interval);
   })
 
-
   useEffect(() => {
-    console.log('cast init')
+  }, []);
 
-    function onAvailable() {
-      console.log('available')
-    }
+  const handleCast = async () => {
+    console.log('casting');
+    console.log(options);
+    chromecastPlayer.state.displayName = 'Chocolate'
+    chromecastPlayer.state.title = options.title ?? 'Video';
+    chromecastPlayer.state.imageUrl = options.cover;
 
-    chromecast.on('available', onAvailable)
-
-    chromecast.on('connect', () => {
-      console.log('connect')
-    })
-
-    chromecast.on('disconnect', () => {
-      console.log('disconnect')
-    })
-
-    chromecast.on('playing', () => {
-      console.log('playing')
-    })
-
-    chromecast.on('pause', () => {
-      console.log('pause')
-    })
-
-    chromecast.on('error', (e) => {
-      console.error(e)
-    })
-
-    // remove event listeners
-    return function cleanup() {
-      chromecast.off('connect')
-      chromecast.off('disconnect')
-      // remove specific listener
-      chromecast.off('available', onAvailable)
-      chromecast.off('pause')
-      chromecast.off('playing')
-      chromecast.off('error')
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-
-  const handleCast = () => {
-    try {
-      if (chromecast.available) {
-        if (chromecast.connected) {
-          chromecast.disconnect()
-        }
-        chromecast.cast(options.sources[0].src, {
-          title: 'Video Title',
-        })
-      }
-    }
-    catch (e) {
-      console.error(e)
-    }
+    chromecastPlayer.startCast(options.sources[0].src, 'application/vnd.apple.mpegurl');
+    console.log(chromecastPlayer);
   }
 
   const handlePip = () => {
@@ -493,9 +484,33 @@ export const Video = ({ options, onReady = () => { }, previousURL = null, previo
                 <span>/</span>
                 <span>{formatTime(player.current ? player.current.duration : 0)}</span>
               </div>
+              {/*
               <div className='player-cast'>
-                <CastButton onClick={handleCast} />
+                <MdOutlineCast className='player-control-icon' onClick={handleCast} />
               </div>
+              */}
+              <div className='player-subtitles-popup' style={{ opacity: qualityOpen ? '1' : '0', pointerEvents: qualityOpen ? 'all' : 'none' }}>
+                <div className='player-caption' onClick={() => handleQualitySelection(null)}>
+                  {(selectedQuality === null) ? <IoCheckmark className='player-control-icon' /> : <div></div>}
+                  <h3>Auto</h3>
+                  <div></div>
+                </div>
+                {qualities.map((audioTrack, index) => {
+                  return (
+                    <div key={index} className='player-caption' onClick={() => handleQualitySelection(audioTrack)}>
+                      {(selectedQuality && selectedQuality === audioTrack.id) ? <IoCheckmark className='player-control-icon' /> : <div></div>}
+                      <h3>{audioTrack.height}</h3>
+                      <div></div>
+                    </div>
+                  );
+                })}
+              </div>
+              {qualities && qualities.length > 0 ?
+                <div className='player-subtitles-selector'>
+                  <IoSettingsSharp className='player-control-icon' onClick={handleQualityOpen} />
+                </div>
+                : null
+              }
               <div className='player-subtitles-popup' style={{ opacity: audioTrackOpen ? '1' : '0', pointerEvents: audioTrackOpen ? 'all' : 'none' }}>
                 {audioTracks.map((audioTrack, index) => {
                   return (

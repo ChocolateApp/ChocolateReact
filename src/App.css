@@ -1897,6 +1897,11 @@ input.video-player-progress.video-slider:focus {
   height: 16px;
 }
 
+.player-controls-right * {
+  display: flex;
+  align-items: center;
+}
+
 .player-time {
   gap: 2px !important;
 }

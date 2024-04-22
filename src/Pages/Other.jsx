@@ -20,17 +20,12 @@ export default function Other() {
     }
 
     const options = {
-        autoplay: true,
-        controls: true,
-        preload: "none",
-        techOrder: ['chromecast', 'html5', 'hls'],
+        title: "Other",
         sources: [{
             src: `${process.env.REACT_APP_DEV_URL}/main_other/${id}`,
-            type: "application/x-mpegURL"
+            type: "application/vnd.apple.mpegurl"
         }],
-        html5: {
-            nativeTextTracks: false
-        }
+        cover: `${process.env.REACT_APP_DEV_URL}/other_cover/${id}`,
     };
 
     return (
