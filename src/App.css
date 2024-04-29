@@ -1845,7 +1845,6 @@ input[type="range"].video-slider:disabled::-moz-range-progress {
   opacity: 1;
   pointer-events: all;
   transition: all 0.5s ease-in-out;
-  z-index: 1;
 }
 
 .player-controls.disabled,
@@ -1925,6 +1924,7 @@ svg.player-control-icon {
   align-items: center;
   bottom: 6dvh;
   padding: 1dvh 0.5vw;
+  z-index: 1;
 }
 
 .player-caption {
