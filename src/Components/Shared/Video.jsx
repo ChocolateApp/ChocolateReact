@@ -3,6 +3,7 @@ import { IoPause, IoPlay, IoVolumeMute, IoVolumeHigh, IoVolumeLow, IoVolumeMediu
 import { MdFullscreen, MdFullscreenExit, MdPictureInPicture, MdPictureInPictureAlt, MdSubtitles, MdSpatialAudioOff, MdOutlineCast } from 'react-icons/md'; // eslint-disable-line no-unused-vars
 import { useNavigate } from 'react-router-dom';
 import { useCast, useEventListener } from '@jdion/cast-react';
+import useTrait from '../../Utils/useTrait';
 
 import Hls from "hls.js";
 
@@ -47,15 +48,15 @@ export const Video = ({ options }) => {
   const [qualityOpen, setQualityOpen] = useState(false);
 
   // Captions states
-  const [captions, setCaptions] = useState([]); // the list of captions objects
+  const captions = useTrait([]); // the list of captions objects
   const [selectedCaption, setSelectedCaption] = useState(null); // the full caption object
 
   // Audio track states
-  const [audioTracks, setAudioTracks] = useState([]); // the list of audio tracks objects
+  const audioTracks = useTrait([]); // the list of audio tracks objects
   const [selectedAudioTrack, setSelectedAudioTrack] = useState(null); // the audio track id
 
   // Quality states
-  const [qualities, setQualities] = useState([]); // the list of qualities objects
+  const qualities = useTrait([]); // the list of qualities objects
   const [selectedQuality, setSelectedQuality] = useState(null); // the quality id
 
 
@@ -234,8 +235,12 @@ export const Video = ({ options }) => {
   }
 
   const handleVideoStream = () => {
+    if (!audioTracks.get() || !captions.get() || !qualities.get()) return;
+    if (audioTracks.get().length > 0) return;
+    if (captions.get().length > 0) return;
+    if (qualities.get().length > 0) return;
 
-    if (HLS && qualities.length === 0) {
+    if (HLS && qualities.get().length === 0) {
       let levels = HLS.levels;
       for (let i = 0; i < levels.length; i++) {
         let qualityObject = {
@@ -243,12 +248,13 @@ export const Video = ({ options }) => {
           height: levels[i].height + 'p',
           bitrate: levels[i].bitrate,
         };
-        setQualities(prevQualities => [...prevQualities, qualityObject]);
+        let old_qualities = [...qualities.get(), qualityObject];
+        qualities.set(old_qualities);
       }
     }
 
 
-    if (HLS && captions.length === 0) {
+    if (HLS && captions.get().length === 0) {
       let subtitleTracks = HLS.allSubtitleTracks;
       for (let i = 0; i < subtitleTracks.length; i++) {
         let subtitleObject = {
@@ -256,20 +262,23 @@ export const Video = ({ options }) => {
           name: subtitleTracks[i].name,
           language: subtitleTracks[i].lang,
         };
-        setCaptions(prevCaptions => [...prevCaptions, subtitleObject]);
+        let old_captions = [...captions.get(), subtitleObject];
+        captions.set(old_captions);
       }
     }
 
-    if (HLS && audioTracks.length === 0) {
-      let audioTracks = HLS.audioTracks;
-      for (let i = 0; i < audioTracks.length; i++) {
+    if (HLS && audioTracks.get().length === 0) {
+      let HLSaudioTracks = HLS.audioTracks;
+      for (let i = 0; i < HLSaudioTracks.length; i++) {
         let audioTrackObject = {
-          id: audioTracks[i].id,
-          name: audioTracks[i].name,
-          language: audioTracks[i].lang,
+          id: HLSaudioTracks[i].id,
+          name: HLSaudioTracks[i].name,
+          language: HLSaudioTracks[i].lang,
         };
-        setAudioTracks(prevAudioTracks => [...prevAudioTracks, audioTrackObject]);
+        let old_audio_tracks = [...audioTracks.get(), audioTrackObject];
+        audioTracks.set(old_audio_tracks);
       }
+
     }
 
     if (HLS && selectedAudioTrack === null) {
@@ -282,6 +291,14 @@ export const Video = ({ options }) => {
   }
 
   useEffect(() => {
+    audioTracks.set([]);
+    captions.set([]);
+    qualities.set([]);
+    setSelectedAudioTrack(null);
+    setSelectedCaption(null);
+    setSelectedQuality(null);
+
+
     if (player.current) {
       const video = player.current;
       if (video) {
@@ -350,9 +367,9 @@ export const Video = ({ options }) => {
 
   const handleAudioTrackSelection = (audioTrack) => {
     if (selectedAudioTrack && audioTrack && selectedAudioTrack === audioTrack.id) {
-      let audioTracks = HLS.audioTracks;
-      setSelectedAudioTrack(audioTracks[0].id);
-      HLS.audioTrack = audioTracks[0].id;
+      let HLSaudioTracks = HLS.audioTracks;
+      setSelectedAudioTrack(HLSaudioTracks[0].id);
+      HLS.audioTrack = HLSaudioTracks[0].id;
       return;
     }
     setSelectedAudioTrack(audioTrack.id);
@@ -497,7 +514,7 @@ export const Video = ({ options }) => {
                   <h3>Auto</h3>
                   <div></div>
                 </div>
-                {qualities.map((audioTrack, index) => {
+                {qualities.get().map((audioTrack, index) => {
                   return (
                     <div key={index} className='player-caption' onClick={() => handleQualitySelection(audioTrack)}>
                       {(selectedQuality && selectedQuality === audioTrack.id) ? <IoCheckmark className='player-control-icon' /> : <div></div>}
@@ -507,14 +524,14 @@ export const Video = ({ options }) => {
                   );
                 })}
               </div>
-              {qualities && qualities.length > 0 ?
+              {qualities.get() && qualities.get().length > 0 ?
                 <div className='player-subtitles-selector'>
                   <IoSettingsSharp className='player-control-icon' onClick={handleQualityOpen} />
                 </div>
                 : null
               }
               <div className='player-subtitles-popup' style={{ opacity: audioTrackOpen ? '1' : '0', pointerEvents: audioTrackOpen ? 'all' : 'none' }}>
-                {audioTracks.map((audioTrack, index) => {
+                {audioTracks.get().map((audioTrack, index) => {
                   return (
                     <div key={index} className='player-caption' onClick={() => handleAudioTrackSelection(audioTrack)}>
                       {(selectedAudioTrack && selectedAudioTrack === audioTrack.id) ? <IoCheckmark className='player-control-icon' /> : <div></div>}
@@ -524,7 +541,7 @@ export const Video = ({ options }) => {
                   );
                 })}
               </div>
-              {audioTracks && audioTracks.length > 0 ?
+              {audioTracks.get() && audioTracks.get().length > 0 ?
                 <div className='player-subtitles-selector'>
                   <MdSpatialAudioOff className='player-control-icon' onClick={handleAudioTracksOpen} />
                 </div>
@@ -532,7 +549,7 @@ export const Video = ({ options }) => {
               }
 
               <div className='player-subtitles-popup' style={{ opacity: subtitlesOpen ? '1' : '0', pointerEvents: subtitlesOpen ? 'all' : 'none' }}>
-                {captions.map((caption, index) => {
+                {captions.get().map((caption, index) => {
                   return (
                     <div key={index} className='player-caption' onClick={() => handleCaptionSelection(caption)}>
                       {(selectedCaption && selectedCaption.id === caption.id) ? <IoCheckmark className='player-control-icon' /> : <div></div>}
@@ -542,7 +559,7 @@ export const Video = ({ options }) => {
                   );
                 })}
               </div>
-              {captions && captions.length > 0 ?
+              {captions.get() && captions.get().length > 0 ?
                 <div className='player-subtitles-selector'>
                   <MdSubtitles className='player-control-icon' onClick={handleCaptionOpen} />
                 </div>
