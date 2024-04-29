@@ -9,7 +9,7 @@ import Hls from "hls.js";
 import Buttons from "../../Components/Shared/Buttons";
 
 
-export const Video = ({ options, previousURL = null, previousText = "", nextURL = null, nextText = "", periodsToSkip = null }) => {
+export const Video = ({ options }) => {
   const navigate = useNavigate();
   const { player: chromecastPlayer } = useCast()
 
@@ -34,14 +34,13 @@ export const Video = ({ options, previousURL = null, previousText = "", nextURL 
 
   // Skip button states
   // Some states to manage the skip button
-  const [skipButtonVisible, setSkipButtonVisible] = useState(false);
+  const [skipRecurrent, setSkipRecurrent] = useState(false); // eslint-disable-line no-unused-vars
   const [skipButtonText, setSkipButtonText] = useState('Skip Intro');
   const [skipButtonTime, setSkipButtonTime] = useState(0);
-  const [skipButtonType, setSkipButtonType] = useState('intro');
+  const [skipButtonType, setSkipButtonType] = useState('outro');
 
   // Video controls states
   // Some states to manage the video controls
-  const [timeOfPreviousClick, setTimeOfPreviousClick] = useState(0);// eslint-disable-line no-unused-vars
   const [timeOfPreviousMouseMovement, setTimeOfPreviousMouseMovement] = useState(0);
   const [subtitlesOpen, setSubtitlesOpen] = useState(false);
   const [audioTrackOpen, setAudioTrackOpen] = useState(false);
@@ -144,22 +143,21 @@ export const Video = ({ options, previousURL = null, previousText = "", nextURL 
     const typeToText = {
       'intro': 'Skip Intro',
       'outro': 'Skip Outro',
-      'recap': 'Skip Recap'
+      'recap': 'Skip Recap',
     }
-    if (periodsToSkip == null || periodsToSkip.length === 0) return;
-    for (let i = 0; i < periodsToSkip.length; i++) {
-      let start_time = parseFloat(periodsToSkip[i].start_time);
-      let end_time = parseFloat(periodsToSkip[i].end_time);
-      let type = periodsToSkip[i].type;
+    if (options.periods_to_skip == null || options.periods_to_skip.length === 0) return;
+    for (let i = 0; i < options.periods_to_skip.length; i++) {
+      let start_time = parseFloat(options.periods_to_skip[i].start_time);
+      let end_time = parseFloat(options.periods_to_skip[i].end_time);
+      let type = options.periods_to_skip[i].type;
       if (currentTime >= Math.max(start_time - 5, 0) && currentTime <= end_time - 1) {
         setSkipButtonType(type);
-        setSkipButtonVisible(true);
-        setSkipButtonText(typeToText[periodsToSkip[i].type]);
+        setSkipButtonText(typeToText[options.periods_to_skip[i].type]);
         setSkipButtonTime(end_time);
         return;
       }
     }
-    setSkipButtonVisible(false);
+
   }
 
 
@@ -313,7 +311,7 @@ export const Video = ({ options, previousURL = null, previousText = "", nextURL 
         }
       }
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [options]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleMouseMovement = () => {
     setTimeOfPreviousMouseMovement(new Date().getTime());
@@ -435,6 +433,10 @@ export const Video = ({ options, previousURL = null, previousText = "", nextURL 
       setIsMuted(true);
       player.current.volume = 0;
     }
+  }
+
+  const handleEpisodeChange = (episode) => {
+    navigate(episode);
   }
 
 
@@ -576,12 +578,13 @@ export const Video = ({ options, previousURL = null, previousText = "", nextURL 
           </div>
           <div className='player-buttons'>
             {/* Previous button */}
-            {(skipButtonVisible && previousURL !== null) ? <Buttons text={previousText} onClick={() => navigate(previousURL)} /> : <div></div>}
+            {(options.previous_episode !== null) ? <Buttons text={options.previous_text} onClick={() => handleEpisodeChange(options.previous_episode)} /> : <div></div>}
 
             {/* Skip button */}
-            {(skipButtonVisible && nextURL !== null && skipButtonType === 'outro') ? <Buttons text={nextText} onClick={() => navigate(nextURL)} /> :
-              (skipButtonVisible && nextURL !== null && skipButtonType !== 'outro') ? <Buttons text={skipButtonText} onClick={() => goToDuration(skipButtonTime - 1)} /> : <div></div>
-            }
+            {(options.next_episode !== null && skipButtonType === 'outro') ? <Buttons text={options.next_text} onClick={() => handleEpisodeChange(options.next_episode)} /> : (
+              (options.next_episode !== null && skipButtonType !== 'outro') ? <Buttons text={skipButtonText} onClick={() => goToDuration(skipButtonTime - 1)} /> : <div></div>
+            )}
+
           </div>
         </div>
       </div>

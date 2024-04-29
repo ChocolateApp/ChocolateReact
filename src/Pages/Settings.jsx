@@ -15,15 +15,15 @@ export default function Settings() {
 
   return (
     <>
-        <JustCog />
-        <Back />
-        <div className="settings">
-            <CreateAccountCard />
-            <AllAccounts />
-            <AllLibraries />
-            <RescanAll />
-            <GeneralSettings />
-        </div>
+      <JustCog />
+      <Back />
+      <div className="settings">
+        <CreateAccountCard />
+        <AllAccounts />
+        <AllLibraries />
+        <RescanAll />
+        <GeneralSettings />
+      </div>
     </>
   );
 }
