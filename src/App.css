@@ -1848,6 +1848,7 @@ input[type="range"].video-slider:disabled::-moz-range-progress {
 }
 
 .player-controls.disabled,
+.player-controls.disabled + .player-buttons,
 .player-controls.disabled * {
   transition: all 0.5s ease-in-out;
   opacity: 0 !important;
