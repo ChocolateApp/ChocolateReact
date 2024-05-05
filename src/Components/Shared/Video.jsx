@@ -595,11 +595,11 @@ export const Video = ({ options }) => {
           </div>
           <div className='player-buttons'>
             {/* Previous button */}
-            {(options.previous_episode !== null) ? <Buttons text={options.previous_text} onClick={() => handleEpisodeChange(options.previous_episode)} /> : <div></div>}
+            {(options.previous_text != null && options.previous_episode !== null) ? <Buttons text={options.previous_text} onClick={() => handleEpisodeChange(options.previous_episode)} /> : <div></div>}
 
             {/* Skip button */}
-            {(options.next_episode !== null && skipButtonType === 'outro') ? <Buttons text={options.next_text} onClick={() => handleEpisodeChange(options.next_episode)} /> : (
-              (options.next_episode !== null && skipButtonType !== 'outro') ? <Buttons text={skipButtonText} onClick={() => goToDuration(skipButtonTime - 1)} /> : <div></div>
+            {(options.next_text != null && options.next_episode !== null && skipButtonType === 'outro') ? <Buttons text={options.next_text} onClick={() => handleEpisodeChange(options.next_episode)} /> : (
+              (options.next_text != null && options.next_episode !== null && skipButtonType !== 'outro') ? <Buttons text={skipButtonText} onClick={() => goToDuration(skipButtonTime - 1)} /> : <div></div>
             )}
 
           </div>
