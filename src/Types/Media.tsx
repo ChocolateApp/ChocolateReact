@@ -4,6 +4,14 @@ interface MediaImages {
     logo: string;
 }
 
+interface EPG {
+    title: string;
+    start: string;
+    stop: string;
+    description: string;
+    icon: string;
+}
+
 interface Media {
     id: number;
     banner_id: number;
@@ -21,6 +29,9 @@ interface Media {
     serie_representation?: SeasonRepresentation[];
     last_duration?: number;
     images: MediaImages;
+    _tv_path?: string;
+    _source?: string;
+    _epg?: EPG;
 }
 
 

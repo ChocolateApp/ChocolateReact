@@ -18,6 +18,7 @@ import VideoMedia from '@/Pages/Watch/VideoMedia.tsx';
 import LayoutHeader from '@/Layouts/LayoutHeader';
 
 import { SearchProvider } from '@/Contexts/SearchContext.tsx';
+import TV from './Pages/TV/TV';
 
 
 const RenderWatch = () => {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
       {
         path: "/shows",
         element: <Shows />,
+      },
+      {
+        path: "/live-tv",
+        element: <TV />,
       },
       {
         path: "/watch/:type/:id",

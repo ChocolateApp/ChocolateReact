@@ -44,9 +44,13 @@ const MediaCarousel: React.FC<MediaCarouselProps> = ({ medias, index }) => {
                 ref={swiperRef}
             >
                 {medias.map((media, index) => (
-                    <SwiperSlide key={index} className='!w-fit'>
-                        <MediaCard media={media} />
-                    </SwiperSlide>
+                    <>
+                        {!media ? null : (
+                            <SwiperSlide key={index} className='!w-fit'>
+                                <MediaCard media={media} />
+                            </SwiperSlide>
+                        )}
+                    </>
                 ))}
             </Swiper>
 
