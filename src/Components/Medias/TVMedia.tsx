@@ -38,7 +38,7 @@ const TVMedia: React.FC<TVMediaCardProps> = ({ media }) => {
     return (
         <article onMouseEnter={handleHover} onMouseLeave={handleLeave} onClick={handleClicked} className='relative'>
             <img
-                src={`${media._epg?.icon}`}
+                src={`${media._epg?.cover}`}
                 alt={media.serie_title || media.title}
                 className='w-full h-full object-contain rounded-md select-none'
             />

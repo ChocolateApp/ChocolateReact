@@ -9,7 +9,7 @@ interface EPG {
     start: string;
     stop: string;
     description: string;
-    icon: string;
+    cover: string;
 }
 
 interface Media {
