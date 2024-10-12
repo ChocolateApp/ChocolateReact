@@ -266,6 +266,10 @@ const VideoMedia = () => {
 
         let url = `${import.meta.env.VITE_API_URL}/api/watch/${type}/${id}`;
 
+        if (mediaData?.data?._source) {
+            url = mediaData.data._source;
+        }
+
         if (playerRef.current) {
             if (Hls.isSupported()) {
                 const hls = new Hls({
@@ -486,7 +490,6 @@ const VideoMedia = () => {
 
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
         if (!playerRef.current) return;
-
         switch (e.key) {
             case "f":
                 toggleFullscreen();
@@ -528,6 +531,16 @@ const VideoMedia = () => {
                     }
                     return newVolume;
                 });
+                break;
+            case "PageUp":
+                if (mediaData?.data?._next) {
+                    navigate(`/watch/${type}/${mediaData.data._next}`);
+                }
+                break;
+            case "PageDown":
+                if (mediaData?.data?._previous) {
+                    navigate(`/watch/${type}/${mediaData.data._previous}`);
+                }
                 break;
             default:
                 break;
