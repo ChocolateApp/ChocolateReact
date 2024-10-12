@@ -32,6 +32,8 @@ interface Media {
     _tv_path?: string;
     _source?: string;
     _epg?: EPG;
+    _next?: number | null;
+    _previous?: number | null;
 }
 
 
