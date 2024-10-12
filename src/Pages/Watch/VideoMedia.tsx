@@ -271,11 +271,13 @@ const VideoMedia = () => {
                 const hls = new Hls({
                     xhrSetup: (xhr, url) => {
                         xhr.open("GET", url, true);
-                        xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('access_token')}`);
-                        xhr.setRequestHeader("X-Current-Time", String(playerRef.current?.currentTime || 0));
+
+                        if (url.includes(import.meta.env.VITE_API_URL)) {
+                            xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('access_token')}`);
+                            xhr.setRequestHeader("X-Current-Time", String(playerRef.current?.currentTime || 0));
+                        }
 
                         xhr.onreadystatechange = async () => {
-                            //check if the "code" in the body is 246
                             if (xhr.readyState === 4 && xhr.status === 200) {
                                 try {
                                     const response = JSON.parse(xhr.responseText);
@@ -300,8 +302,10 @@ const VideoMedia = () => {
                                             updateProfileData(refreshData.data.user);
 
                                             xhr.open("GET", url, true);
-                                            xhr.setRequestHeader("Authorization", `Bearer ${access_token}`);
-                                            xhr.setRequestHeader("X-Current-Time", String(playerRef.current?.currentTime || 0));
+                                            if (url.includes(import.meta.env.VITE_API_URL)) {
+                                                xhr.setRequestHeader("Authorization", `Bearer ${access_token}`);
+                                                xhr.setRequestHeader("X-Current-Time", String(playerRef.current?.currentTime || 0));
+                                            }
                                             xhr.send();
                                         }
                                     }
