@@ -368,7 +368,7 @@ const VideoMedia = () => {
                 HLS.destroy();
             }
         };
-    }, [id, type]);
+    }, [id, type, mediaData?.data?._source]);
 
     useEffect(() => {
         if (!playerRef.current) return;

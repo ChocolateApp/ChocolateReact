@@ -14,7 +14,7 @@ const TVMainMedia = ({ media }: { media: HomeMedias["main_media"] }) => {
     const { updateProfileData, updateAccessToken } = useLoginStore();
 
     useEffect(() => {
-        let url = `${import.meta.env.VITE_API_URL}/api/watch/live-tv/${media.id}`
+        let url = media._source;
 
         if (playerRef.current && url) {
             if (Hls.isSupported()) {
