@@ -57,6 +57,12 @@ const Login = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (accounts && accounts.data.length === 0) {
+            navigate("/invite");
+        }
+    }, [accounts])
+
+    useEffect(() => {
         if (error) {
             toast.error(error.message);
         }
