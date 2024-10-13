@@ -50,7 +50,7 @@ function TV() {
           <section className="flex flex-col gap-8 pl-4 pr-4 overflow-hidden">
             <section className="flex flex-col gap-4">
               <h3 className="text-3xl font-bold">Results</h3>
-              <section className="grid grid-cols-4 gap-4">
+              <section className="grid grid-cols-6 gap-4">
                 {homeData.data.medias.slice(1).map((media: any, index: number) => (
                   <TVMedia media={media} key={index} />
                 ))
