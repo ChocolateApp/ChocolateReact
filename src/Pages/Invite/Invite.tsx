@@ -2,9 +2,13 @@ import React, { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import { usePost } from '@/hooks/useFetch';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { usePost } from '@/Hooks/useFetch';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
 // Define the Zod schema for validation
 const schema = z.object({
@@ -24,7 +28,7 @@ const schema = z.object({
 });
 
 const SignUp: React.FC = () => {
-    const { handleSubmit, register, formState: { errors }, getValues } = useForm<z.infer<typeof schema>>({
+    const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
     });
     const navigate = useNavigate();
@@ -46,7 +50,7 @@ const SignUp: React.FC = () => {
             toast.success("Registration successful");
             navigate('/sign-in');
         } catch (error: any) {
-            toast.error("Error", { description: error.message });
+            toast.error(error.message);
         }
     };
 
@@ -60,46 +64,46 @@ const SignUp: React.FC = () => {
     }, [signUpData]);
 
     return (
-        <section className="w-full max-w-md mx-auto mt-8">
-            <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-                <div>
-                    <label htmlFor="username" className="block mb-1">Username</label>
-                    <input
-                        {...register("username")}
-                        id="username"
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded"
-                    />
-                    {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
-                </div>
-                <div>
-                    <label htmlFor="password" className="block mb-1">Password</label>
-                    <input
-                        {...register("password")}
-                        id="password"
-                        type="password"
-                        className="w-full p-2 border border-gray-300 rounded"
-                    />
-                    {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-                </div>
-                <div>
-                    <label htmlFor="confirmPassword" className="block mb-1">Confirm Password</label>
-                    <input
-                        {...register("confirmPassword")}
-                        id="confirmPassword"
-                        type="password"
-                        className="w-full p-2 border border-gray-300 rounded"
-                    />
-                    {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
-                </div>
-                <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded" disabled={handleSubmitPending}>
-                    {handleSubmitPending ? "Signing Up..." : "Sign Up"}
-                </button>
-                <div className="mt-4 text-center">
-                    <Link to="/sign-in" className="text-blue-500 underline">Already have an account? Sign In</Link>
-                </div>
-            </form>
+        <section className="h-screen w-screen flex items-center justify-center">
+            <Card className='w-1/4 py-2 px-4'>
+                <CardHeader>
+                    <CardTitle>Sign Up</CardTitle>
+                </CardHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                        <FormField control={form.control} name="username" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel htmlFor="username">Username</FormLabel>
+                                <FormControl>
+                                    <Input {...field} placeholder='Username' />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="password" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel htmlFor="password">Password</FormLabel>
+                                <FormControl>
+                                    <Input {...field} type="password" placeholder='Password' />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="confirmPassword" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                                <FormControl>
+                                    <Input {...field} type="password" placeholder='Confirm Password' />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <Button variant="default">
+                            {handleSubmitPending ? "Signing up..." : "Sign Up"}
+                        </Button>
+                    </form>
+                </Form>
+            </Card>
         </section>
     );
 };

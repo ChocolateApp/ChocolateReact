@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Login from '@/Pages/Auth/Login.tsx';
 import Logout from '@/Pages/Auth/Logout.tsx';
+import Invite from '@/Pages/Invite/Invite.tsx';
 
 import Home from '@/Pages/Home/Home';
 
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/logout",
     element: <Logout />,
+  },
+  {
+    path: "/invite",
+    element: <Invite />,
   },
   {
     path: "/",
