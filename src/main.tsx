@@ -20,6 +20,7 @@ import LayoutHeader from '@/Layouts/LayoutHeader';
 
 import { SearchProvider } from '@/Contexts/SearchContext.tsx';
 import TV from './Pages/TV/TV';
+import Settings from './Pages/Settings/Settings';
 
 
 const RenderWatch = () => {
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
         path: "/watch/:type/:id",
         element: <RenderWatch />,
       },
+      {
+        path: "/settings",
+        element: <Settings />,
+      }
     ],
   },
 ]);
