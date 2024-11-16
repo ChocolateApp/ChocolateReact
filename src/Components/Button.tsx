@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    state: 'primary' | 'secondary';
+    state: 'primary' | 'secondary' | 'danger';
     iconBefore?: React.ReactNode;
     iconAfter?: React.ReactNode;
     to?: string;
@@ -25,7 +25,8 @@ const Button: React.FC<ButtonProps> = ({
 
     const primaryStyle = 'bg-neutral-200 text-neutral-900 hover:bg-neutral-300';
     const secondaryStyle = 'bg-neutral-900 text-neutral-200 hover:bg-neutral-800';
-    const selectedStyle = state === 'primary' ? primaryStyle : secondaryStyle;
+    const dangerStyle = 'bg-red-500 text-white hover:bg-red-600';
+    const selectedStyle = state === 'primary' ? primaryStyle : state === 'secondary' ? secondaryStyle : dangerStyle;
 
     const navigate = useNavigate();
 
