@@ -180,3 +180,146 @@ export function usePost() {
 
     return { data, handleSubmit, handleChange, pending, error, resMsg };
 }
+
+export function useDelete() {
+    const [data, setData] = useState<MainAPIResponses | null>(null);
+    const [pending, setPending] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [resMsg, setResMsg] = useState<string | null>(null);
+
+    const { access_token, refresh_token } = useLoginStore();
+
+    const defaultHeaders = {
+        Authorization: `Bearer ${access_token}`,
+        "x-refresh-token": refresh_token,
+    };
+
+    const handleSubmit = async ({
+        e = "",
+        url,
+        body = data,
+        headers = { ...defaultHeaders },
+        dispatcher = null,
+        dispatch = (data: any) => data,
+    }: { e?: any; url: string; body?: any; headers?: any; dispatcher?: any; dispatch?: any }) => {
+        e && e.preventDefault();
+
+        setPending(true);
+        setError(null);
+        try {
+            const requestOptions = {
+                method: "DELETE",
+                headers: {
+                    ...headers,
+                    ...defaultHeaders,
+                    "Content-Type": body instanceof FormData ? "multipart/form-data" : "application/json",
+                },
+                body: body instanceof FormData ? body : JSON.stringify(body),
+            };
+
+            if (!url.startsWith("http")) {
+                url = `${import.meta.env.VITE_API_URL}${url}`;
+            }
+
+            const res = await fetch(url, requestOptions);
+
+            if (!res.ok) {
+                throw new Error(`Request failed with status ${res.status}`);
+            }
+
+            const json = await res.json();
+
+            if (dispatcher !== null && dispatch !== null) {
+                dispatcher(dispatch(json));
+            } else {
+                setData(json);
+                setResMsg(json);
+            }
+
+            setPending(false);
+            setError(null);
+        } catch (err: any) {
+            setError(err.message);
+            setPending(false);
+        }
+    };
+
+    const handleChange = (e: any) => {
+        e.persist();
+        setData((data: any) => ({ ...data, [e.target.name]: e.target.value }));
+    };
+
+    return { data, handleSubmit, handleChange, pending, error, resMsg };
+}
+
+
+export function usePut() {
+    const [data, setData] = useState<MainAPIResponses | null>(null);
+    const [pending, setPending] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [resMsg, setResMsg] = useState<string | null>(null);
+
+    const { access_token, refresh_token } = useLoginStore();
+
+    const defaultHeaders = {
+        Authorization: `Bearer ${access_token}`,
+        "x-refresh-token": refresh_token,
+    };
+
+    const handleSubmit = async ({
+        e = "",
+        url,
+        body = data,
+        headers = { ...defaultHeaders },
+        dispatcher = null,
+        dispatch = (data: any) => data,
+    }: { e?: any; url: string; body?: any; headers?: any; dispatcher?: any; dispatch?: any }) => {
+        e && e.preventDefault();
+
+        setPending(true);
+        setError(null);
+        try {
+            const requestOptions = {
+                method: "PUT",
+                headers: {
+                    ...headers,
+                    ...defaultHeaders,
+                    "Content-Type": body instanceof FormData ? "multipart/form-data" : "application/json",
+                },
+                body: body instanceof FormData ? body : JSON.stringify(body),
+            };
+
+            if (!url.startsWith("http")) {
+                url = `${import.meta.env.VITE_API_URL}${url}`;
+            }
+
+            const res = await fetch(url, requestOptions);
+
+            if (!res.ok) {
+                throw new Error(`Request failed with status ${res.status}`);
+            }
+
+            const json = await res.json();
+
+            if (dispatcher !== null && dispatch !== null) {
+                dispatcher(dispatch(json));
+            } else {
+                setData(json);
+                setResMsg(json);
+            }
+
+            setPending(false);
+            setError(null);
+        } catch (err: any) {
+            setError(err.message);
+            setPending(false);
+        }
+    };
+
+    const handleChange = (e: any) => {
+        e.persist();
+        setData((data: any) => ({ ...data, [e.target.name]: e.target.value }));
+    };
+
+    return { data, handleSubmit, handleChange, pending, error, resMsg };
+}
