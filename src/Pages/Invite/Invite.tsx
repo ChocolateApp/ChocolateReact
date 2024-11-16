@@ -35,17 +35,14 @@ const SignUp: React.FC = () => {
     const { handleSubmit: handleSignUp, data: signUpData, pending: handleSubmitPending } = usePost();
 
     const onSubmit = async (values: z.infer<typeof schema>) => {
-        //if there's ?code in the url, set the type to user else admin
-        if (window.location.search.includes("code")) {
-            values.type = "user";
-        } else {
-            values.type = "admin";
-        }
 
         try {
             await handleSignUp({
                 url: '/auth/signup',
-                body: values,
+                body: {
+                    ...values,
+                    code: window.location.search.includes("code"),
+                },
             });
             toast.success("Registration successful");
             navigate('/sign-in');
@@ -65,7 +62,7 @@ const SignUp: React.FC = () => {
 
     return (
         <section className="h-screen w-screen flex items-center justify-center">
-            <Card className='w-1/4 py-2 px-4'>
+            <Card className='w-1/4 py-2 px-4 pb-8'>
                 <CardHeader>
                     <CardTitle>Sign Up</CardTitle>
                 </CardHeader>
@@ -75,7 +72,7 @@ const SignUp: React.FC = () => {
                             <FormItem>
                                 <FormLabel htmlFor="username">Username</FormLabel>
                                 <FormControl>
-                                    <Input {...field} placeholder='Username' />
+                                    <Input {...field} placeholder='Username' autoComplete='given-name' />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -84,7 +81,7 @@ const SignUp: React.FC = () => {
                             <FormItem>
                                 <FormLabel htmlFor="password">Password</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="password" placeholder='Password' />
+                                    <Input {...field} type="password" placeholder='Password' autoComplete='new-password' />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -93,7 +90,7 @@ const SignUp: React.FC = () => {
                             <FormItem>
                                 <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="password" placeholder='Confirm Password' />
+                                    <Input {...field} type="password" placeholder='Confirm Password' autoComplete='new-password' />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
