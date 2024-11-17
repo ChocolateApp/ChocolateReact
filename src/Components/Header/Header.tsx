@@ -18,7 +18,7 @@ const LayoutHeader = () => {
     return (
         !isMobile ? (
             <section>
-                <header className="flex justify-between items-center py-4 px-16 text-white absolute w-full z-[99999]">
+                <header className="flex justify-between items-center py-4 px-16 text-white sticky top-0 left-0 w-full z-[99999]">
                     <section className="flex gap-4 items-center">
                         <img src="/logo.png" alt="Logo" className='w-12 h-12 cursor-pointer' onClick={() => navigate("/home")} />
                         <nav className="flex gap-4">

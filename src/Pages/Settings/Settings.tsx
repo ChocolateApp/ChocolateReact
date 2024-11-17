@@ -19,7 +19,7 @@ const Settings: React.FC = () => {
     }, []);
 
     return (
-        <div className="flex h-screen pt-20">
+        <div className="flex h-screen">
             <div className="w-1/6 border-r-2 border-zinc-800 text-white p-4">
                 <h2 className="text-xl font-bold mb-4">Settings</h2>
                 <ul>
