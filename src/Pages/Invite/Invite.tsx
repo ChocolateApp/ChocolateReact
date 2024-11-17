@@ -27,18 +27,25 @@ const schema = z.object({
     path: ['confirmPassword'],
 });
 
+
 const SignUp: React.FC = () => {
     const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
+        defaultValues: {
+            username: "",
+            password: "",
+            confirmPassword: "",
+            type: "user",
+        },
     });
     const navigate = useNavigate();
     const { handleSubmit: handleSignUp, data: signUpData, pending: handleSubmitPending } = usePost();
 
     const onSubmit = async (values: z.infer<typeof schema>) => {
-
+        console.log(values);
         try {
             await handleSignUp({
-                url: '/auth/signup',
+                url: '/api/auth/signup',
                 body: {
                     ...values,
                     code: window.location.search.includes("code"),
