@@ -1,0 +1,307 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 14.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+
+    --radius: 0.5rem;
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+}
+
+body {
+  background-color: hsl(var(--background));
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+a.active {
+  font-weight: 800;
+}
+
+img {
+  user-select: none;
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hamburger .line {
+  width: 1.5rem;
+  height: 2px;
+  background-color: rgb(109, 109, 109);
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.hamburger .line:nth-child(3) {
+  width: 1rem;
+}
+
+.hamburger.active .line:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger.active .line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active .line:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+  width: 1.5rem;
+}
+
+/* === range === */
+input[type="range"] {
+  color: #fff;
+  --thumb-height: 0.75em;
+  --track-height: 0.125em;
+  --track-color: #8e8e8e33;
+  --brightness-hover: 180%;
+  --brightness-down: 80%;
+  --clip-edges: 0.125em;
+}
+
+/* === range commons === */
+input[type="range"] {
+  position: relative;
+  background: #fff0;
+  overflow: hidden;
+}
+
+input[type="range"]:active {
+  cursor: grabbing;
+}
+
+input[type="range"]:disabled {
+  filter: grayscale(1);
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* === WebKit specific styles === */
+input[type="range"],
+input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  transition: all ease 100ms;
+  height: var(--thumb-height);
+}
+
+input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-webkit-slider-thumb {
+  position: relative;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  --thumb-radius: calc((var(--thumb-height) * 0.5) - 1px);
+  --clip-top: calc((var(--thumb-height) - var(--track-height)) * 0.5 - 0.5px);
+  --clip-bottom: calc(var(--thumb-height) - var(--clip-top));
+  --clip-further: calc(100% + 1px);
+  --box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0
+    100vmax currentColor;
+
+  width: var(--thumb-width, var(--thumb-height));
+  background: linear-gradient(currentColor 0 0) scroll no-repeat left center /
+    50% calc(var(--track-height) + 1px);
+  background-color: currentColor;
+  box-shadow: var(--box-fill);
+  border-radius: var(--thumb-width, var(--thumb-height));
+
+  filter: brightness(100%);
+  clip-path: polygon(
+    100% -1px,
+    var(--clip-edges) -1px,
+    0 var(--clip-top),
+    -100vmax var(--clip-top),
+    -100vmax var(--clip-bottom),
+    0 var(--clip-bottom),
+    var(--clip-edges) 100%,
+    var(--clip-further) var(--clip-further)
+  );
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  filter: brightness(var(--brightness-hover));
+  cursor: grab;
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  filter: brightness(var(--brightness-down));
+  cursor: grabbing;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(var(--track-color) 0 0) scroll no-repeat center /
+    100% calc(var(--track-height) + 1px);
+}
+
+input[type="range"]:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+/* === Firefox specific styles === */
+input[type="range"],
+input[type="range"]::-moz-range-track,
+input[type="range"]::-moz-range-thumb {
+  appearance: none;
+  transition: all ease 100ms;
+  height: var(--thumb-height);
+}
+
+input[type="range"]::-moz-range-track,
+input[type="range"]::-moz-range-thumb,
+input[type="range"]::-moz-range-progress {
+  background: #fff0;
+}
+
+input[type="range"]::-moz-range-thumb {
+  background: currentColor;
+  border: 0;
+  width: var(--thumb-width, var(--thumb-height));
+  border-radius: var(--thumb-width, var(--thumb-height));
+  cursor: grab;
+}
+
+input[type="range"]:active::-moz-range-thumb {
+  cursor: grabbing;
+}
+
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  background: var(--track-color);
+}
+
+input[type="range"]::-moz-range-progress {
+  appearance: none;
+  background: currentColor;
+  transition-delay: 30ms;
+}
+
+input[type="range"]::-moz-range-track,
+input[type="range"]::-moz-range-progress {
+  height: calc(var(--track-height) + 1px);
+  border-radius: var(--track-height);
+}
+
+input[type="range"]::-moz-range-thumb,
+input[type="range"]::-moz-range-progress {
+  filter: brightness(100%);
+}
+
+input[type="range"]:hover::-moz-range-thumb,
+input[type="range"]:hover::-moz-range-progress {
+  filter: brightness(var(--brightness-hover));
+}
+
+input[type="range"]:active::-moz-range-thumb,
+input[type="range"]:active::-moz-range-progress {
+  filter: brightness(var(--brightness-down));
+}
+
+input[type="range"]:disabled::-moz-range-thumb,
+input[type="range"]:disabled::-moz-range-progress {
+  cursor: not-allowed;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  /* Désactive le style par défaut */
+  appearance: none;
+  /* Désactive le style par défaut */
+  width: 5rem !important;
+  /* Largeur du slider */
+  height: 120px !important;
+  /* Hauteur pour le slider vertical */
+  position: absolute !important;
+  /* Positionnement absolu */
+  bottom: 15%;
+  /* Positionné juste au-dessus du bouton */
+  left: 50%;
+  /* Centré horizontalement */
+  transform: translateX(-50%) rotate(-90deg);
+  /* Rotation de 90° */
+  display: none;
+  /* Caché par défaut */
+}
+
+.volume-hover:hover .volume-slider,
+.volume-slider:hover {
+  display: block;
+  /* Affiche le slider au survol */
+}
