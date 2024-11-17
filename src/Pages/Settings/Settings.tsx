@@ -2,9 +2,21 @@ import React, { useState, useEffect } from 'react';
 import GeneralSettings from './Subpages/GeneralSettings';
 import AccountsSettings from './Subpages/AccountsSettings';
 import LibrariesSettings from './Subpages/LibrariesSettings';
+import { useGet } from '@/Hooks/useFetch';
+import { useNavigate } from 'react-router-dom';
 
 const Settings: React.FC = () => {
     const [currentSection, setCurrentSection] = useState<string>(window.location.hash || '#general');
+
+    const { data: authData } = useGet('/api/auth/check');
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!authData?.data || authData.data.account_type !== 'Admin') {
+            navigate('/');
+        }
+    }, [authData]);
 
     useEffect(() => {
         const handleHashChange = () => {
