@@ -21,6 +21,7 @@ import LayoutHeader from '@/Layouts/LayoutHeader';
 import { SearchProvider } from '@/Contexts/SearchContext.tsx';
 //import TV from './Pages/TV/TV';
 import Settings from './Pages/Settings/Settings';
+import Profil from './Pages/Profil/Profil';
 
 import NotFoundPage from './Pages/Errors/404';
 
@@ -84,7 +85,11 @@ const router = createBrowserRouter([
       {
         path: "/settings",
         element: <Settings />,
-      }
+      },
+      {
+        path: "/profil",
+        element: <Profil />,
+      },
     ],
   },
   {
@@ -104,6 +109,6 @@ createRoot(document.getElementById('root')!).render(
     <SearchProvider>
       <RouterProvider router={router} />
     </SearchProvider>
-    <ToastContainer theme='colored' />
+    <ToastContainer theme='colored' position='bottom-right' />
   </>
 );
