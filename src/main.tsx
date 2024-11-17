@@ -19,7 +19,7 @@ import VideoMedia from '@/Pages/Watch/VideoMedia.tsx';
 import LayoutHeader from '@/Layouts/LayoutHeader';
 
 import { SearchProvider } from '@/Contexts/SearchContext.tsx';
-import TV from './Pages/TV/TV';
+//import TV from './Pages/TV/TV';
 import Settings from './Pages/Settings/Settings';
 
 import NotFoundPage from './Pages/Errors/404';

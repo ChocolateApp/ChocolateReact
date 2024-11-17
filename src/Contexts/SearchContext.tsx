@@ -1,7 +1,9 @@
 import { ReactNode, createContext, useState } from 'react';
 
+
 export const SearchContext = createContext({
     searchTerm: '',
+    // @ts-ignore
     setSearchTerm: (term: string) => { },
 });
 

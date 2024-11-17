@@ -1,6 +1,3 @@
-interface NotFoundProps {
-}
-
 const NotFound = () => {
     return (
         <div>

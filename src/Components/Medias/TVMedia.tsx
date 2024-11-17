@@ -8,7 +8,7 @@ interface TVMediaCardProps {
 
 const TVMedia: React.FC<TVMediaCardProps> = ({ media }) => {
     const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
-    const [isHovered, setIsHovered] = useState(false);
+    const [, setIsHovered] = useState(false);
     const isHoveredRef = useRef(false);
 
     const navigate = useNavigate();
