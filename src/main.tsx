@@ -73,10 +73,10 @@ const router = createBrowserRouter([
         path: "/shows",
         element: <Shows />,
       },
-      {
-        path: "/live-tv",
-        element: <TV />,
-      },
+      // {
+      //   path: "/live-tv",
+      //   element: <TV />,
+      // },
       {
         path: "/watch/:type/:id",
         element: <RenderWatch />,
