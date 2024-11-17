@@ -21,7 +21,7 @@ const schema = z.object({
         .refine((data) => /[0-9]/.test(data), { message: "Password must contain at least one number" })
         .refine((data) => /[!@#$%^&*()_+[\]{};':"\\|,.<>/?`~\\-]/.test(data), { message: "Password must contain at least one special character" }),
     confirmPassword: z.string(),
-    type: z.enum(["admin", "user"]),
+    type: z.enum(["admin", "adult", "teen", "kid"]),
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ['confirmPassword'],
@@ -35,7 +35,7 @@ const SignUp: React.FC = () => {
             username: "",
             password: "",
             confirmPassword: "",
-            type: "user",
+            type: "admin",
         },
     });
     const navigate = useNavigate();
