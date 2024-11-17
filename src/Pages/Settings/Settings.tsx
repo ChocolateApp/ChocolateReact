@@ -13,7 +13,8 @@ const Settings: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!authData?.data || authData.data.account_type !== 'Admin') {
+        if (!authData) return;
+        if (!authData.data || authData.data.account_type !== 'Admin') {
             navigate('/');
         }
     }, [authData]);
