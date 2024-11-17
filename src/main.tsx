@@ -22,6 +22,8 @@ import { SearchProvider } from '@/Contexts/SearchContext.tsx';
 import TV from './Pages/TV/TV';
 import Settings from './Pages/Settings/Settings';
 
+import NotFoundPage from './Pages/Errors/404';
+
 
 const RenderWatch = () => {
   const { type } = useParams<{ type: string }>();
@@ -85,6 +87,16 @@ const router = createBrowserRouter([
       }
     ],
   },
+  {
+    path: "*",
+    element: <LayoutHeader />,
+    children: [
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      }
+    ]
+  }
 ]);
 
 createRoot(document.getElementById('root')!).render(
