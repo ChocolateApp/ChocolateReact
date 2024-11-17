@@ -100,7 +100,9 @@ function Home() {
       )}
       {((searchData && searchData.code !== 201) || (homeData && homeData.code !== 201)) && (
         <section className="h-screen flex justify-center items-center">
-          <NotFound />
+          <h1 className="text-4xl font-bold">No data found</h1>
+          <p className="text-lg">Please try again later</p>
+          <p className="text-lg">If you're the admin, ensure you have a library, and that you've scanned it.</p>
         </section>
       )}
     </>

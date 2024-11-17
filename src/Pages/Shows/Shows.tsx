@@ -63,9 +63,9 @@ function Shows() {
   return (
     <>
       {<Loading className={"h-screen top-0 fixed bg-[--black] w-screen transition-all duration-300 pointer-events-none z-50 " + (loading ? "opacity-100" : "opacity-0")} />}
-      {!searchData && homeData && (
+      {!searchData && homeData && homeData.data && (
         <section className={`flex flex-col gap-8 pb-8 ${loading ? "overflow-hidden" : ""}`}>
-          <MainMedia media={homeData.data.main_media} />
+          <MainMedia media={homeData.data?.main_media} />
           <section className="flex flex-col gap-8 pl-4 overflow-hidden">
             {keys.map((key, index) => (
               homeData.data[key]?.length > 0 && (
@@ -80,13 +80,20 @@ function Shows() {
       )}
       {searchData && (
         <section className={`flex flex-col gap-8 pb-8 ${loading ? "overflow-hidden" : ""}`}>
-          <MainMedia media={searchData.data.main_media} />
+          <MainMedia media={searchData.data?.main_media} />
           <section className="flex flex-col gap-8 pl-4 overflow-hidden">
             <section className="flex flex-col gap-4">
               <h3 className="text-3xl font-bold">Results</h3>
-              <MediaCarousel medias={searchData.data.medias} index={0} />
+              <MediaCarousel medias={searchData.data?.medias} index={0} />
             </section>
           </section>
+        </section>
+      )}
+      {((searchData && searchData.code !== 201) || (homeData && homeData.code !== 201)) && (
+        <section className="h-screen flex justify-center items-center">
+          <h1 className="text-4xl font-bold">No data found</h1>
+          <p className="text-lg">Please try again later</p>
+          <p className="text-lg">If you're the admin, ensure you have a library, and that you've scanned it.</p>
         </section>
       )}
     </>
