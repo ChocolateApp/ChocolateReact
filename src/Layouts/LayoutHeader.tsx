@@ -10,7 +10,7 @@ const LayoutHeader = ({ children }: { children?: React.ReactNode }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (librariesData && librariesData.data.length == 0) {
+        if (librariesData && (!librariesData.data || librariesData.data.length == 0)) {
             navigate('/settings#libraries');
         }
     }, [librariesData]);
