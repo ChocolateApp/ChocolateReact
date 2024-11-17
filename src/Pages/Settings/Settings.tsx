@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GeneralSettings from './Subpages/GeneralSettings';
 import AccountsSettings from './Subpages/AccountsSettings';
+import LibrariesSettings from './Subpages/LibrariesSettings';
 
 const Settings: React.FC = () => {
     const [currentSection, setCurrentSection] = useState<string>(window.location.hash || '#general');
@@ -41,10 +42,7 @@ const Settings: React.FC = () => {
                     <AccountsSettings />
                 )}
                 {currentSection === '#libraries' && (
-                    <div>
-                        <h2 className="text-xl font-bold mb-4">Libraries</h2>
-                        <p>Libraries settings</p>
-                    </div>
+                    <LibrariesSettings />
                 )}
             </div>
         </div>
