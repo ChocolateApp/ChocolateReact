@@ -62,11 +62,7 @@ const LibrariesSettings: React.FC = () => {
 
     const onScan = async (library: Library) => {
         await handleScan({
-            url: `/api/settings/libraries`,
-            body: {
-                ...library,
-                scan: true,
-            },
+            url: `/api/libraries/refresh/${library.id}`,
         });
     };
 
